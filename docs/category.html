@@ -1,0 +1,1006 @@
+<!-- Modified category.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="theme-color" content="#000000">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="API endpoints, RESTful API category, developer documentation, dark theme API tools">
+    <meta property="og:title" content="Category - ">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <title>Category - </title>
+    <link rel="icon" href="" type="image/png">
+    <link rel="canonical" href="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['Ubuntu Mono', 'monospace'],
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            display: none !important;
+        }
+        /* Loader styles */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #4b5563;
+            border-top: 4px solid #9333ea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            margin-top: 16px;
+            font-size: 1.25rem;
+            color: #d1d5db;
+        }
+        .loading-text::after {
+            display: inline-block;
+            content: '...';
+            animation: loading-dots 1.5s steps(4, end) infinite;
+            width: 1em;
+        }
+        @keyframes loading-dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+        .slide-down {
+            animation: slideDown 0.15s ease-out;
+        }
+        .slide-up {
+            animation: slideUp 0.15s ease-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        .truncate {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background-color: #9333ea;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200 antialiased font-mono min-h-screen">
+    <!-- Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <span class="loading-text">Loading</span>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-gray-700">
+        <div class="py-4 px-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-100">API Categories</h3>
+            <button onclick="closeSidebar()" class="text-gray-400 hover:text-gray-100">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div id="sidebarContent" class="pt-4 px-4 space-y-3"></div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black/50 hidden z-[50]" onclick="closeSidebar()"></div>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="hidden fixed top-12 right-4 bg-black border border-gray-700 p-4 z-[60] shadow-xl rounded-lg w-80 max-h-96 overflow-y-auto transition-all">
+        <div class="flex justify-between items-center mb-3">
+            <h4 class="text-sm font-bold text-gray-100">Notifications</h4>
+            <button id="clearNotifications" class="text-purple-400 text-xs hover:text-purple-300">Clear All</button>
+        </div>
+        <div id="notifContent" class="space-y-3"></div>
+    </div>
+
+    <header class="sticky top-0 z-50 bg-black border-b border-gray-700 py-4 shadow-md">
+        <div class="max-w-2xl mx-auto flex justify-between items-center px-4">
+            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110">
+                <i class="fas fa-bars text-gray-100 text-xl"></i>
+            </button>
+            <h1 id="headerTitle" class="text-lg font-bold text-gray-100"></h1>
+            <button onclick="toggleNotifications()" class="pr-2 relative transition-all hover:scale-110">
+                <i class="fas fa-bell text-gray-100 text-xl"></i>
+                <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-8 py-6">
+        <div class="text-left mb-3">
+        </div>
+
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex-1 relative">
+                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                    <span class="material-icons text-gray-500 text-lg">search</span>
+                </div>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search endpoints..." 
+                    class="w-full pl-12 pr-5 py-4 text-sm border border-gray-700 bg-black text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-500 rounded-lg shadow-sm transition-all focus:shadow-md"
+                >
+            </div>
+        </div>
+
+        <div id="content" class="space-y-4">
+            <div id="noResults" class="text-center py-16" style="display: none;">
+                <div class="max-w-md mx-auto">
+                    <h3 class="text-xs text-gray-500 mb-2">No result found.</h3>
+                </div>
+            </div>
+
+            <div id="apiList" class="space-y-3"></div>
+        </div>
+    </main>
+
+    <footer class="bg-black border-t border-gray-700 py-6">
+        <div class="max-w-4xl mx-auto px-8 text-center text-gray-500 text-xs">
+            <p>Thx To All Users And Contributors.</p>
+            <p id="footerCopyright"></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarContent = document.getElementById('sidebarContent');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const notifContent = document.getElementById('notifContent');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        const notifBadge = document.getElementById('notifBadge');
+
+        function toggleSidebar() {
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                notificationPanel.classList.add('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                closeSidebar();
+            }
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function toggleNotifications() {
+            if (notificationPanel.classList.contains('hidden')) {
+                notificationPanel.classList.remove('hidden');
+                closeSidebar();
+            } else {
+                notificationPanel.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
+                closeSidebar();
+                notificationPanel.classList.add('hidden');
+            }
+        });
+
+        clearNotificationsBtn.addEventListener('click', () => {
+            localStorage.setItem('notificationsCleared', 'true');
+            notifContent.innerHTML = '<p class="text-xs text-gray-400">No notifications yet.</p>';
+            notifBadge.classList.add('hidden');
+        });
+
+        let searchInput, noResults, apiList;
+
+        function toggleEndpoint(endpointIndex) {
+            const content = document.getElementById(`endpoint-${endpointIndex}`);
+            const icon = document.getElementById(`endpoint-icon-${endpointIndex}`);
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.classList.add('slide-down');
+                icon.style.transform = 'rotate(180deg)';
+                setTimeout(() => initializeIndicator(endpointIndex), 50);
+            } else {
+                content.classList.add('slide-up');
+                icon.style.transform = 'rotate(0deg)';
+                setTimeout(() => {
+                    content.classList.add('hidden');
+                    content.classList.remove('slide-up', 'slide-down');
+                }, 150);
+            }
+        }
+
+        function initializeIndicator(endpointIndex) {
+            const getTab = document.getElementById(`tab-get-${endpointIndex}`);
+            if (getTab) {
+                const indicator = document.getElementById(`tab-indicator-${endpointIndex}`);
+                indicator.style.left = getTab.offsetLeft + 'px';
+                indicator.style.width = getTab.offsetWidth + 'px';
+            }
+        }
+
+        function generateExampleCurl(endpointIndex, method) {
+            const form = document.getElementById(`form-${endpointIndex}`);
+            const onsubmit = form.getAttribute('onsubmit');
+            const pathMatch = onsubmit.match(/, '([^']+)', '[^']+'\)$/);
+            const path = pathMatch ? pathMatch[1] : '';
+            let fullUrl = window.location.origin + path;
+            let curl = `curl -X ${method} "${fullUrl}"`;
+            const currentDivClass = `.method-${method.toLowerCase()}-${endpointIndex}`;
+            const currentDiv = form.querySelector(currentDivClass);
+            if (!currentDiv) return;
+            const inputs = currentDiv.querySelectorAll('input[type="text"]');
+            let routeValues = {};
+            let otherParams = {};
+            inputs.forEach(input => {
+                const ex = input.placeholder || '';
+                if (input.name.startsWith('route_')) {
+                    const pn = input.name.replace('route_', '');
+                    routeValues[pn] = ex;
+                } else {
+                    otherParams[input.name] = ex;
+                }
+            });
+            for (const [pn, val] of Object.entries(routeValues)) {
+                fullUrl = fullUrl.replace(`:${pn}`, encodeURIComponent(val));
+            }
+            curl = `curl -X ${method} "${fullUrl}"`;
+            if (method === 'GET' || method === 'HEAD') {
+                const qp = new URLSearchParams(otherParams);
+                if (qp.toString()) {
+                    fullUrl += '?' + qp.toString();
+                    curl = `curl -X ${method} "${fullUrl}"`;
+                }
+            } else {
+                let jsonBody = otherParams;
+                const textarea = currentDiv.querySelector('textarea[name="body"]');
+                if (textarea) {
+                    try {
+                        jsonBody = JSON.parse(textarea.value);
+                    } catch (e) {
+                        jsonBody = {};
+                    }
+                }
+                if (Object.keys(jsonBody).length > 0) {
+                    curl = `curl -X ${method} "${fullUrl}" \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                }
+            }
+            const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+            curlContent.textContent = curl;
+        }
+
+        function switchMethod(endpointIndex, method) {
+            const tabs = ['GET', 'POST']; // Assuming GET and POST
+            tabs.forEach(m => {
+                const tab = document.getElementById(`tab-${m.toLowerCase()}-${endpointIndex}`);
+                if (tab) {
+                    if (m === method) {
+                        tab.classList.add('text-gray-100');
+                        tab.classList.remove('text-gray-500');
+                        const indicator = document.getElementById(`tab-indicator-${endpointIndex}`);
+                        if (indicator) {
+                            indicator.style.left = tab.offsetLeft + 'px';
+                            indicator.style.width = tab.offsetWidth + 'px';
+                        }
+                    } else {
+                        tab.classList.remove('text-gray-100');
+                        tab.classList.add('text-gray-500');
+                    }
+                }
+            });
+
+            tabs.forEach(m => {
+                const contents = document.querySelectorAll(`.method-${m.toLowerCase()}-${endpointIndex}`);
+                contents.forEach(el => {
+                    el.style.display = m === method ? 'block' : 'none';
+                    el.querySelectorAll('input, textarea, select').forEach(inp => inp.disabled = m !== method);
+                });
+            });
+
+            const form = document.getElementById(`form-${endpointIndex}`);
+            let onsubmit = form.getAttribute('onsubmit');
+            onsubmit = onsubmit.replace(/executeRequest\(event, \d+, '[A-Z]+'/, `executeRequest(event, ${endpointIndex}, '${method}'`);
+            form.setAttribute('onsubmit', onsubmit);
+
+            generateExampleCurl(endpointIndex, method);
+        }
+
+        function clearResponse(endpointIndex) {
+            const responseElement = document.getElementById(`response-${endpointIndex}`);
+            const responseContent = document.getElementById(`response-content-${endpointIndex}`);
+            const curlElement = document.getElementById(`curl-${endpointIndex}`);
+            const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+            const clearButton = document.getElementById(`clear-${endpointIndex}`);
+
+            responseElement.classList.add('slide-up');
+            curlElement.classList.add('slide-up');
+            setTimeout(() => {
+                responseElement.classList.add('hidden');
+                responseElement.classList.remove('slide-up', 'slide-down');
+                responseContent.innerHTML = '';
+                curlElement.classList.add('hidden');
+                curlElement.classList.remove('slide-up', 'slide-down');
+                curlContent.textContent = '';
+                clearButton.classList.add('hidden');
+            }, 150);
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                console.log('Fallback: Copying text command was ' + (successful ? 'successful' : 'unsuccessful'));
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            let text = '';
+
+            if (elementId.startsWith('response-content-')) {
+                const headerPres = element.querySelectorAll('.text-gray-400 pre');
+                const headerText = Array.from(headerPres).map(pre => pre.textContent.trim()).join('\n');
+                const bodyPre = element.querySelector('pre.text-white');
+                const bodyText = bodyPre ? bodyPre.textContent : '';
+                text = headerText + (bodyText ? '\n\n' + bodyText : '');
+            } else if (elementId.startsWith('curl-content-')) {
+                text = element.textContent.replace(/\s*\\\n\s*/g, ' \\\n  ').trim();
+            }
+
+            if (!navigator.clipboard) {
+                fallbackCopy(text);
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                fallbackCopy(text);
+            });
+        }
+
+        async function executeRequest(event, endpointIndex, method, path, contentType) {
+            event.preventDefault();
+
+            const form = event.target;
+            const responseElement = document.getElementById(`response-${endpointIndex}`);
+            const responseContent = document.getElementById(`response-content-${endpointIndex}`);
+            const clearButton = document.getElementById(`clear-${endpointIndex}`);
+            const copyResponseButton = document.getElementById(`copy-response-${endpointIndex}`);
+
+            let fullUrl = window.location.origin + path;
+            const formData = new FormData(form);
+
+            const curlElement = document.getElementById(`curl-${endpointIndex}`);
+            let curlCommand = `curl -X ${method} "${fullUrl}"`;
+
+            for (let [key, value] of formData.entries()) {
+                if (key.startsWith('route_') && value) {
+                    const paramName = key.replace('route_', '');
+                    const placeholder = ':' + paramName;
+                    fullUrl = fullUrl.replace(placeholder, encodeURIComponent(value));
+                    path = path.replace(placeholder, encodeURIComponent(value));
+                }
+            }
+
+            try {
+                let axiosConfig = {
+                    method: method,
+                    url: fullUrl,
+                    headers: {}
+                };
+
+                if (method === 'GET' || method === 'HEAD') {
+                    const params = {};
+                    for (let [key, value] of formData.entries()) {
+                        if (value && key !== 'body' && !key.startsWith('route_')) {
+                            params[key] = value;
+                        }
+                    }
+                    if (Object.keys(params).length > 0) {
+                        axiosConfig.params = params;
+                        const urlParams = new URLSearchParams(params);
+                        path += '?' + urlParams.toString();
+                        fullUrl += '?' + urlParams.toString();
+                        curlCommand = `curl -X ${method} "${fullUrl}"`;
+                    }
+                } else {
+                    if (contentType === 'multipart/form-data') {
+                        const newFormData = new FormData();
+                        let formFields = [];
+                        for (let [key, value] of formData.entries()) {
+                            if (!key.startsWith('route_') && value) {
+                                newFormData.append(key, value);
+                                if (value instanceof File) {
+                                    formFields.push(`-F "${key}=@${value.name}"`);
+                                } else {
+                                    formFields.push(`-F "${key}=${value}"`);
+                                }
+                            }
+                        }
+                        if (formFields.length > 0) {
+                            axiosConfig.data = newFormData;
+                            axiosConfig.headers['Content-Type'] = 'multipart/form-data';
+                            curlCommand += ` \\\n  ${formFields.join(' \\\n  ')}`;
+                        }
+                    } else if (contentType === 'application/json') {
+                        const bodyTextarea = form.querySelector('textarea[name="body"]');
+                        if (bodyTextarea && bodyTextarea.value.trim()) {
+                            try {
+                                const jsonBody = JSON.parse(bodyTextarea.value);
+                                axiosConfig.headers['Content-Type'] = 'application/json';
+                                axiosConfig.data = jsonBody;
+                                curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                            } catch (e) {
+                                throw new Error('Invalid JSON in request body');
+                            }
+                        } else {
+                            const jsonBody = {};
+                            for (let [key, value] of formData.entries()) {
+                                if (key !== 'body' && !key.startsWith('route_') && value) {
+                                    jsonBody[key] = value;
+                                }
+                            }
+                            if (Object.keys(jsonBody).length > 0) {
+                                axiosConfig.headers['Content-Type'] = 'application/json';
+                                axiosConfig.data = jsonBody;
+                                curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                            }
+                        }
+                    } else {
+                        const jsonBody = {};
+                        for (let [key, value] of formData.entries()) {
+                            if (key !== 'body' && !key.startsWith('route_') && value) {
+                                jsonBody[key] = value;
+                            }
+                        }
+                        if (Object.keys(jsonBody).length > 0) {
+                            axiosConfig.headers['Content-Type'] = 'application/json';
+                            axiosConfig.data = jsonBody;
+                            curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                        }
+                    }
+                }
+
+                const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+                curlContent.textContent = curlCommand;
+                curlElement.classList.remove('hidden');
+                curlElement.classList.add('slide-down');
+
+                responseContent.innerHTML = '<span class="text-white">Loading...</span>';
+                responseElement.classList.remove('hidden');
+                responseElement.classList.add('slide-down');
+
+                const response = await axios(axiosConfig);
+                const responseContentType = response.headers['content-type'] || '';
+
+                const headerHtml = `<div class="text-gray-400 text-xs mb-3">
+                    <pre>Method: ${method}</pre>
+                    <pre>URL: ${fullUrl}</pre>
+                    <pre>Status: ${response.status} ${response.statusText}</pre>
+                </div>`;
+
+                if (responseContentType.includes('application/json')) {
+                    const jsonString = JSON.stringify(response.data, null, 2);
+                    const escapedJsonString = jsonString
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
+
+                    responseContent.innerHTML = headerHtml + `<pre class="text-white">${escapedJsonString}</pre>`;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                } else if (responseContentType.includes('image/')) {
+                    axiosConfig.responseType = 'blob';
+                    const blobResponse = await axios(axiosConfig);
+                    const imageUrl = URL.createObjectURL(blobResponse.data);
+                    responseContent.innerHTML = headerHtml + `
+                        <img src="${imageUrl}" alt="Response Image" class="max-w-full h-auto rounded">
+                    `;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => { 
+                        const a = document.createElement('a'); 
+                        a.href = imageUrl; 
+                        a.download = 'image'; 
+                        a.click(); 
+                    };
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                } else if (responseContentType.includes('audio/')) {
+                    axiosConfig.responseType = 'blob';
+                    const blobResponse = await axios(axiosConfig);
+                    const audioUrl = URL.createObjectURL(blobResponse.data);
+                    responseContent.innerHTML = headerHtml + `
+                        <div class="text-white mb-3">Audio Player:</div>
+                        <audio controls class="w-full mb-3">
+                            <source src="${audioUrl}" type="${responseContentType}">
+                            Your browser does not support the audio element.
+                        </audio>
+                    `;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => { 
+                        const a = document.createElement('a'); 
+                        a.href = audioUrl; 
+                        a.download = 'audio'; 
+                        a.click(); 
+                    };
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                } else if (responseContentType.includes('video/')) {
+                    axiosConfig.responseType = 'blob';
+                    const blobResponse = await axios(axiosConfig);
+                    const videoUrl = URL.createObjectURL(blobResponse.data);
+                    responseContent.innerHTML = headerHtml + `
+                        <div class="text-white mb-3">Video Player:</div>
+                        <video controls class="w-full max-h-64 mb-3 rounded">
+                            <source src="${videoUrl}" type="${responseContentType}">
+                            Your browser does not support the video element.
+                        </video>
+                    `;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => { 
+                        const a = document.createElement('a'); 
+                        a.href = videoUrl; 
+                        a.download = 'video'; 
+                        a.click(); 
+                    };
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                } else if (responseContentType.includes('application/pdf')) {
+                    axiosConfig.responseType = 'blob';
+                    const blobResponse = await axios(axiosConfig);
+                    const pdfUrl = URL.createObjectURL(blobResponse.data);
+                    responseContent.innerHTML = headerHtml + `
+                        <div class="text-white mb-3">PDF Document:</div>
+                        <iframe src="${pdfUrl}" class="w-full h-64 border border-gray-600 mb-3 rounded"></iframe>
+                    `;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => { 
+                        const a = document.createElement('a'); 
+                        a.href = pdfUrl; 
+                        a.download = 'document.pdf'; 
+                        a.click(); 
+                    };
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                } else {
+                    responseContent.innerHTML = headerHtml + `<pre class="text-white whitespace-pre-wrap m-0">${response.data}</pre>`;
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                }
+            } catch (error) {
+                let errorMessage = error.message;
+                let statusInfo = 'Error';
+
+                if (error.response) {
+                    statusInfo = `${error.response.status} ${error.response.statusText}`;
+                    if (error.response.data && typeof error.response.data === 'object') {
+                        errorMessage = JSON.stringify(error.response.data, null, 2);
+                    } else {
+                        errorMessage = error.response.data || error.message;
+                    }
+                } else if (error.request) {
+                    errorMessage = 'Network Error: ' + error.message;
+                }
+
+                responseContent.innerHTML = `
+                    <div class="text-gray-400 text-xs mb-3">
+                        <pre>Method: ${method}</pre>
+                        <pre>URL: ${fullUrl}</pre>
+                        <pre>Status: ${statusInfo}</pre>
+                    </div>
+                    <pre class="text-white">${errorMessage.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}</pre>
+                `;
+                responseElement.classList.remove('hidden');
+                responseElement.classList.add('slide-down');
+                copyResponseButton.classList.remove('hidden');
+            } finally {
+                clearButton.classList.remove('hidden');
+            }
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const apiItems = document.querySelectorAll('.api-item');
+            let visibleCount = 0;
+
+            apiItems.forEach(item => {
+                const path = item.getAttribute('data-path').toLowerCase();
+                const alias = item.getAttribute('data-alias').toLowerCase();
+
+                const searchMatch = path.includes(searchTerm) || alias.includes(searchTerm);
+
+                if (searchMatch) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (visibleCount === 0 && apiItems.length > 0) {
+                noResults.style.display = 'block';
+                apiList.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                apiList.style.display = 'block';
+            }
+        }
+
+        async function loadCategory() {
+            const loader = document.getElementById('loader');
+            try {
+                const setRes = await fetch('/set');
+                const setData = await setRes.json();
+                document.querySelector('meta[name="description"]').content = setData.description;
+                document.querySelector('meta[property="og:description"]').content = setData.description;
+                document.querySelector('link[rel="icon"]').href = setData.icon;
+                document.getElementById('footerCopyright').textContent = `© ${setData.name}. | All Rights Reserved.`;
+
+                // Notifications
+                const cleared = localStorage.getItem('notificationsCleared') === 'true';
+                const notifications = cleared ? [] : (setData.notification || []);
+                let notifHtml = '';
+                if (notifications.length > 0) {
+                    notifHtml = notifications.map(n => `
+                        <div class="border-b border-gray-700 py-2 last:border-0">
+                            <h5 class="text-xs font-bold text-gray-100">${n.title}</h5>
+                            <p class="text-xs text-gray-400">${n.message}</p>
+                        </div>
+                    `).join('');
+                    notifBadge.textContent = notifications.length;
+                    notifBadge.classList.remove('hidden');
+                } else {
+                    notifHtml = '<p class="text-xs text-gray-400">No notifications yet.</p>';
+                }
+                notifContent.innerHTML = notifHtml;
+
+                const catPath = location.pathname.replace('/category/', '').toLowerCase();
+                const res = await fetch('/endpoints');
+                const { endpoints } = await res.json();
+                const category = endpoints.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === catPath);
+                if (!category) {
+                    document.getElementById('noResults').innerHTML = '<div class="max-w-md mx-auto"><h3 class="text-xs text-gray-500 mb-2">Category not found.</h3></div>';
+                    document.getElementById('noResults').style.display = 'block';
+                    document.getElementById('apiList').style.display = 'none';
+                    return;
+                }
+                const capitalizedName = category.name.charAt(0).toUpperCase() + category.name.slice(1) + '.';
+                document.title = `${capitalizedName} - ${setData.name}`;
+                document.querySelector('meta[property="og:title"]').content = `${capitalizedName} - ${setData.name}`;
+                document.querySelector('link[rel="canonical"]').href = window.location.href;
+                document.getElementById('headerTitle').textContent = capitalizedName.replace('.', '');
+                const apiList = document.getElementById('apiList');
+                apiList.innerHTML = '';
+                let index = 0;
+                for (const item of category.items) {
+                    const alias = item.name.replace(/-/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    const basePath = item.path.split('?')[0];
+                    const methods = item.methods;
+                    const methodStr = methods.join('/');
+                    let tabsHtml = '';
+                    if (methods.length > 1) {
+                        tabsHtml = `<div class="tab-container border-b border-gray-700 mb-4"><div class="flex relative">`;
+                        methods.forEach((m, idx) => {
+                            tabsHtml += `
+                                <button 
+                                    type="button"
+                                    onclick="switchMethod(${index}, '${m}')"
+                                    id="tab-${m.toLowerCase()}-${index}"
+                                    class="px-4 py-2 text-xs font-semibold ${idx === 0 ? 'text-gray-100' : 'text-gray-500 hover:text-gray-100'} transition-colors"
+                                >
+                                    ${m}
+                                </button>
+                            `;
+                        });
+                        tabsHtml += `<div class="tab-indicator" id="tab-indicator-${index}"></div></div></div>`;
+                    }
+                    let formHtml = '';
+                    if (item.params && item.params.length) {
+                        formHtml = item.params.map(p => `
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300">
+                                    ${p.name} ${p.required ? '<span class="text-red-400">*</span>' : ''}
+                                </label>
+                                <div class="text-xs text-gray-500 mb-1">
+                                    ${p.description}
+                                </div>
+                                <input 
+                                    type="text" 
+                                    name="${basePath.includes(`:${p.name}`) ? `route_${p.name}` : p.name}" 
+                                    class="w-full px-3 py-2 border border-gray-700 bg-black text-sm focus:outline-none focus:border-purple-500 text-gray-100 placeholder:text-gray-500 rounded-lg transition-all focus:shadow-sm" 
+                                    placeholder="${p.example || ''}" 
+                                    ${p.required ? 'required' : ''}
+                                >
+                            </div>
+                        `).join('');
+                    }
+                    const bodyExample = item.params ? JSON.stringify(item.params.reduce((acc, p) => { if (!basePath.includes(`:${p.name}`)) acc[p.name] = p.example || ''; return acc; }, {}), null, 2) : '{}';
+                    let getStyle = methods.length > 1 ? '' : (methods[0] === 'GET' ? 'display: block;' : 'display: none;');
+                    let postStyle = methods.length > 1 ? 'display: none;' : (methods[0] === 'POST' ? 'display: block;' : 'display: none;');
+                    const div = document.createElement('div');
+                    div.classList.add('bg-black', 'border', 'border-gray-700', 'api-item', 'hover:border-purple-500', 'rounded-lg', 'overflow-hidden', 'shadow-md', 'transition-all', 'hover:shadow-xl');
+                    div.dataset.method = methodStr;
+                    div.dataset.path = basePath;
+                    div.dataset.alias = alias;
+                    div.innerHTML = `
+                        <button onclick="toggleEndpoint(${index})" class="w-full text-left">
+                            <div class="px-4 py-3.5 flex items-center justify-between gap-3 bg-black">
+                                <div class="flex items-center min-w-0 flex-1 gap-3">
+                                    <span class="inline-block px-2.5 py-1 text-xs font-semibold text-white flex-shrink-0 rounded bg-gradient-to-r from-purple-600 to-purple-400 transition-all hover:opacity-90">
+                                        ${methodStr}
+                                    </span>
+                                    <span class="font-semibold truncate font-mono text-sm text-gray-100" title="${basePath}">${basePath}</span>
+                                </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <span class="material-icons transition-transform duration-200 text-gray-400" id="endpoint-icon-${index}">expand_more</span>
+                                </div>
+                            </div>
+                            <div class="px-4 border-t border-gray-700"></div>
+                            <div class="px-4 pb-3 bg-black">
+                                <span class="text-xs text-gray-500 block pt-2.5" title="${alias}">${alias}</span>
+                            </div>
+                        </button>
+                        <div id="endpoint-${index}" class="hidden bg-black p-4 border-t border-gray-700 rounded-b-lg">
+                            <div>
+                                <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                                    <span class="material-icons text-sm mr-1">info</span>
+                                    DESCRIPTION
+                                </div>
+                                <p class="text-xs text-gray-400 mb-4">${item.desc}</p>
+                            </div>
+                            <div>
+                                <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                                    <span class="material-icons text-sm mr-1">play_arrow</span>
+                                    TRY IT OUT
+                                </div>
+                                <div>
+                                    <form id="form-${index}" onsubmit="executeRequest(event, ${index}, '${methods[0]}', '${basePath}', 'application/json')">
+                                        ${tabsHtml}
+                                        <div class="mb-4 space-y-2 method-content method-get-${index}" style="${getStyle}">
+                                            ${formHtml}
+                                        </div>
+                                        <div class="mb-3 method-content method-post-${index}" style="${postStyle}">
+                                            <textarea 
+                                                name="body" 
+                                                rows="8" 
+                                                class="w-full px-3 py-2 border border-gray-700 bg-black text-sm focus:outline-none focus:border-purple-500 text-gray-100 placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-sm resize-none" 
+                                                placeholder="Enter JSON body here...">${bodyExample}</textarea>
+                                            <div class="text-xs text-gray-500 mt-1">
+                                                Modify the JSON structure above as needed for your request.
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="bg-gradient-to-r from-purple-600 to-purple-400 hover:opacity-90 font-semibold text-gray-100 px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
+                                            Execute
+                                        </button>
+                                        <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden bg-black border border-gray-700 hover:border-purple-500 font-semibold text-gray-100 px-6 py-2 text-xs font-medium transition-colors duration-150 ml-2 rounded-lg">
+                                            Clear
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="response-${index}" class="hidden mt-4">
+                                <div class="text-gray-300 font-bold text-xs mb-3 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="material-icons text-sm mr-1">code</span>
+                                        RESPONSE
+                                    </div>
+                                    <button id="copy-response-${index}" onclick="copyToClipboard('response-content-${index}')" class="text-gray-400 hover:text-white flex items-center hidden transition-all">
+                                        <span class="material-icons text-sm">content_copy</span>
+                                    </button>
+                                </div>
+                                <div class="bg-black border border-gray-700 text-white text-xs p-4 rounded-lg">
+                                    <div class="bg-black max-h-80 overflow-auto" id="response-content-${index}"></div>
+                                </div>
+                            </div>
+                            <div id="curl-${index}" class="mt-4">
+                                <div class="text-gray-300 font-bold text-xs mb-3 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="material-icons text-sm mr-1">terminal</span>
+                                        CURL COMMAND
+                                    </div>
+                                    <button onclick="copyToClipboard('curl-content-${index}')" class="text-gray-400 hover:text-white flex items-center transition-all">
+                                        <span class="material-icons text-sm">content_copy</span>
+                                    </button>
+                                </div>
+                                <div class="bg-black border border-gray-700 text-white text-xs p-4 rounded-lg">
+                                    <pre class="text-white whitespace-pre-wrap overflow-auto max-h-40" id="curl-content-${index}"></pre>
+                                </div>
+                            </div>
+                            <div class="mt-4 space-y-4">
+                                <div>
+                                    <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                                        <span class="material-icons text-sm mr-1">list</span>
+                                        HTTP STATUS CODES
+                                    </div>
+                                    <div class="bg-black border border-gray-700 rounded-lg overflow-hidden">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-xs">
+                                                <thead class="bg-gray-800 border-b border-gray-700">
+                                                    <tr>
+                                                        <th class="px-4 py-2 text-left font-semibold text-gray-300">Code</th>
+                                                        <th class="px-4 py-2 text-left font-semibold text-gray-300">Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-gray-700">
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-green-400 text-sm mr-2">check_circle</span>
+                                                                <span class="font-mono font-semibold text-green-400">200</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">OK - Request successful</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
+                                                                <span class="font-mono font-semibold text-red-400">400</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">Bad Request - Invalid parameters or missing required fields</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
+                                                                <span class="font-mono font-semibold text-red-400">404</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">Not Found - Resource not found</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
+                                                                <span class="font-mono font-semibold text-red-400">405</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">Method Not Allowed - HTTP method not supported</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-yellow-400 text-sm mr-2">warning</span>
+                                                                <span class="font-mono font-semibold text-yellow-400">429</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">Too Many Requests - Rate limit exceeded</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-800 transition-all">
+                                                        <td class="px-4 py-2">
+                                                            <div class="flex items-center">
+                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
+                                                                <span class="font-mono font-semibold text-red-400">500</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-4 py-2 text-gray-400">Internal Server Error - Server encountered an error</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    apiList.appendChild(div);
+                    generateExampleCurl(index, methods[0]);
+                    index++;
+                }
+
+                let sidebarHtml = `
+                    <a href="/dashboard" class="flex items-center px-3 py-2 text-gray-100 hover:bg-gray-700 rounded-md transition-all hover:shadow-sm ${location.pathname === '/dashboard' ? 'bg-gray-700' : ''}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-purple-400">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <div class="border-t border-gray-700 my-3 -mx-4"></div>
+                    <p class="text-gray-400 text-sm mb-2 font-medium">Available Categories</p>
+                `;
+                for (const cat of endpoints) {
+                    const capitalizedName = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
+                    const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
+                    const active = location.pathname === `/category/${slug}`;
+                    sidebarHtml += `
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-2 text-gray-100 hover:bg-gray-700 rounded-md transition-all hover:shadow-sm ${active ? 'bg-gray-700' : ''}">
+                            <div class="flex items-center">
+                                <i class="fas fa-folder mr-3 text-purple-400"></i>
+                                ${capitalizedName}
+                            </div>
+                            <span class="text-gray-400 text-sm">(${cat.items.length})</span>
+                        </a>
+                    `;
+                }
+                sidebarHtml += `
+                    <div class="border-t border-gray-700 my-3 -mx-4"></div>
+                    <p class="text-gray-400 text-sm mb-2 font-medium">Links</p>
+                    <a href="${setData.telegram}" target="_blank" class="flex items-center px-3 py-2 text-gray-100 hover:bg-gray-700 rounded-md transition-all hover:shadow-sm">
+                        <i class="fab fa-telegram-plane mr-3 text-purple-400"></i>
+                        Telegram Channel
+                    </a>
+                `;
+                sidebarContent.innerHTML = sidebarHtml;
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('load', () => {
+            searchInput = document.getElementById('searchInput');
+            noResults = document.getElementById('noResults');
+            apiList = document.getElementById('apiList');
+
+            searchInput.addEventListener('input', applyFilters);
+
+            loadCategory();
+        });
+    </script>
+</body>
+</html>

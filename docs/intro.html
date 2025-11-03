@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="theme-color" content="#000000">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="API documentation, RESTful APIs, developer tools, dark theme API dashboard">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <title></title>
+    <link rel="icon" href="" type="image/png">
+    <link rel="canonical" href="/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['Ubuntu Mono', 'monospace'],
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            display: none !important;
+        }
+        /* Loader styles */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #4b5563;
+            border-top: 4px solid #9333ea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            margin-top: 16px;
+            font-size: 1.25rem;
+            color: #d1d5db;
+        }
+        .loading-text::after {
+            display: inline-block;
+            content: '...';
+            animation: loading-dots 1.5s steps(4, end) infinite;
+            width: 1em;
+        }
+        @keyframes loading-dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200 antialiased font-mono min-h-screen">
+    <!-- Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <span class="loading-text">Loading</span>
+    </div>
+
+    <header class="sticky top-0 z-50 bg-black border-b border-gray-700 py-4 shadow-md">
+        <div class="max-w-4xl mx-auto flex justify-between items-center px-4">
+            <h1 id="apiTitle" class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text"></h1>
+            <a href="/dashboard" class="bg-gradient-to-r from-purple-600 to-purple-400 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all hover:opacity-90 hover:shadow-lg">Enter Dashboard</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-10">
+        <section id="introduction" class="mb-12 text-center">
+            <img id="headerImage" src="" alt="Header" class="mx-auto rounded-xl mb-6 w-[80%] md:w-[40%] lg:w-[40%]">
+            <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Welcome to <span id="apiName"></span></h2>
+            <p id="apiDescription" class="text-base text-gray-400 mb-6"></p>
+            <p class="text-base text-gray-400 mb-4">
+                Our platform offers a simple and easy-to-use API documentation system, allowing you to explore and test endpoints in real-time.
+            </p>
+            <p class="text-base text-gray-400">
+                With <span id="totalEndpoints"></span> endpoints across <span id="totalCategories"></span> categories, backed by a reliable and always-online service.
+            </p>
+        </section>
+
+        <section id="getting-started" class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Getting Started</h2>
+            <ol class="space-y-6">
+                <li class="flex">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">1</div>
+                    <div>
+                        <h3 class="font-bold text-gray-100">Choose Your Category</h3>
+                        <p class="text-gray-400 text-base">Browse through available API categories on the sidebar and select what you need.</p>
+                    </div>
+                </li>
+                <li class="flex">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">2</div>
+                    <div>
+                        <h3 class="font-bold text-gray-100">Read the Docs</h3>
+                        <p class="text-gray-400 text-base">Check endpoint parameters, response format, and example usage.</p>
+                    </div>
+                </li>
+                <li class="flex">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">3</div>
+                    <div>
+                        <h3 class="font-bold text-gray-100">Make Your Request</h3>
+                        <p class="text-gray-400 text-base">Send HTTP requests and integrate the JSON response into your app.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section id="terms-of-service" class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Terms of Service</h2>
+            <p class="text-base text-gray-400 mb-4">
+                By using <span id="apiNameTerms"></span>, you agree to the following terms:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-base text-gray-400">
+                <li>Use the APIs responsibly and in accordance with all applicable laws.</li>
+                <li>Do not abuse the service by exceeding reasonable rate limits.</li>
+                <li>We reserve the right to modify or discontinue the service at any time.</li>
+                <li>All content and data provided through the APIs are for informational purposes only.</li>
+                <li>We are not liable for any damages arising from the use of our APIs.</li>
+            </ul>
+            <p class="text-base text-gray-400 mt-4">
+                For full terms, please contact us via our Telegram channel.
+            </p>
+        </section>
+    </main>
+
+    <footer class="bg-black border-t border-gray-700 py-6">
+        <div class="max-w-4xl mx-auto px-8 text-center text-gray-500 text-xs">
+            <p>Thx To All Users And Contributors.</p>
+            <p id="footerCopyright"></p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', async () => {
+            const loader = document.getElementById('loader');
+            try {
+                const setRes = await fetch('/set');
+                const setData = await setRes.json();
+
+                document.title = setData.name;
+                document.querySelector('meta[name="description"]').content = setData.description;
+                document.querySelector('meta[property="og:title"]').content = setData.name;
+                document.querySelector('meta[property="og:description"]').content = setData.description;
+                document.querySelector('link[rel="icon"]').href = setData.icon;
+                document.getElementById('apiTitle').textContent = setData.name;
+                document.getElementById('apiDescription').textContent = setData.description;
+                document.getElementById('headerImage').src = setData.header.imageSrc[0];
+                document.getElementById('footerCopyright').textContent = `© ${setData.name} | All Rights Reserved.`;
+                document.getElementById('apiName').textContent = setData.name;
+                document.getElementById('apiNameTerms').textContent = setData.name;
+
+                const endpointsRes = await fetch('/endpoints');
+                const endpointsData = await endpointsRes.json();
+                const endpoints = endpointsData.endpoints;
+
+                document.getElementById('totalEndpoints').textContent = endpointsData.count;
+                document.getElementById('totalCategories').textContent = endpoints.length;
+            } finally {
+                loader.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

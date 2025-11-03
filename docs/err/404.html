@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Page not found. Return to the dashboard for API documentation and tools.">
+    <meta name="theme-color" content="#000000">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="API documentation, RESTful APIs, developer tools, dark theme API dashboard">
+    <meta property="og:title" content="404 - Page Not Found">
+    <meta property="og:description" content="Page not found. Return to the dashboard for API documentation and tools.">
+    <meta property="og:type" content="website">
+    <title>404 - Page Not Found</title>
+    <link rel="icon" href="" type="image/png">
+    <link rel="canonical" href="/404">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['Ubuntu Mono', 'monospace'],
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            display: none !important;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200 antialiased font-mono min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-6xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text mb-4">404</h1>
+        <p class="text-xl text-gray-400 mb-6">Page Not Found</p>
+        <a href="/dashboard" class="bg-gradient-to-r from-purple-600 to-purple-400 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all hover:opacity-90 hover:shadow-lg">Back to Dashboard</a>
+    </div>
+</body>
+</html>
