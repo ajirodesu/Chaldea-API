@@ -45,7 +45,7 @@ Shin API UI is a lightweight UI and tiny Node server for documenting and exposin
 ```bash
 git clone https://github.com/ajirodesu/Shin-API-UI-V2.git
 cd Shin-API-UI-V2 
-```
+````
 
 2. Install dependencies:
 
@@ -62,7 +62,7 @@ npm install
 ```bash
 npm start
 # or
-node app.js
+node index.js
 ```
 
 Open the UI in your browser (default: `http://localhost:<PORT>`).
@@ -266,7 +266,7 @@ curl "https://shin-apis.onrender.com/example/example?text=Hello"
 
 * The repo is compatible with Vercel, Render, and other Node hosts.
 * For the public demo, see: [https://shin-apis.onrender.com/](https://shin-apis.onrender.com/)
-* On hosts like Render or Vercel, connect the GitHub repo and follow their deployment flow. Ensure `app.js` and `package.json` `start` script are correct.
+* On hosts like Render or Vercel, connect the GitHub repo and follow their deployment flow. Ensure `index.js` and `package.json` `start` script are correct.
 
 ---
 

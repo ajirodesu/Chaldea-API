@@ -1,12 +1,12 @@
 {
-  "name": "shin-api-ui-v2",
+  "name": "Shin-API-UI-V2",
   "version": "1.0.0",
   "description": "Open-source user interface for GET and POST endpoints backend.",
-  "main": "app.js",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "AjiroDesu",
   "license": "MIT",
