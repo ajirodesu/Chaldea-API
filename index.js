@@ -24,17 +24,27 @@ const chalk = require('chalk');
   app.use(express.urlencoded({ extended: false }));
   app.use('/', express.static(path.join(__dirname, 'docs')));
 
+  // Middleware to record request start time
+  app.use((req, res, next) => {
+    req.startTime = Date.now();
+    next();
+  });
+
   logger.info('Starting server initialization...');
 
-  // Middleware to automatically attach creator info to all JSON responses
+  // Middleware to automatically attach creator info, timestamp, and responseTime to all JSON responses
   app.use((req, res, next) => {
     const originalJson = res.json;
     res.json = function (data) {
+      const now = new Date();
+      const timestamp = now.toISOString();
+      const responseTime = (Date.now() - req.startTime) + 'ms';
+
       if (data && typeof data === 'object') {
         const responseData = {
-          status: data.status,
-          // Preserve original case of creator from settings.js
-          creator: set.author || '',
+          operator: set.author || '',
+          timestamp: timestamp,
+          responseTime: responseTime,
           ...data,
         };
         return originalJson.call(this, responseData);
