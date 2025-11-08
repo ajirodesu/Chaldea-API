@@ -30,8 +30,10 @@
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            display: none !important;
+        @media (max-width: 767px) {
+            ::-webkit-scrollbar {
+                display: none !important;
+            }
         }
         /* Loader styles */
         #loader {
@@ -125,9 +127,8 @@
         <div class="spinner"></div>
         <span class="loading-text">Loading</span>
     </div>
-
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-gray-700">
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-gray-700">
         <div class="py-4 px-4 flex justify-between items-center border-b border-gray-700">
             <h3 class="text-lg font-semibold text-gray-100">API Categories</h3>
             <button onclick="closeSidebar()" class="text-gray-400 hover:text-gray-100" aria-label="Close Sidebar">
@@ -136,10 +137,8 @@
         </div>
         <div id="sidebarContent" class="pt-4 px-4 space-y-3"></div>
     </div>
-
     <!-- Overlay -->
-    <div id="overlay" class="fixed inset-0 bg-black/50 hidden z-[50]" onclick="closeSidebar()"></div>
-
+    <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
     <!-- Notification Panel -->
     <div id="notificationPanel" class="hidden fixed top-12 right-4 bg-black border border-gray-700 p-4 z-[60] shadow-xl rounded-lg w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-3">
@@ -148,10 +147,9 @@
         </div>
         <div id="notifContent" class="space-y-3"></div>
     </div>
-
     <header class="sticky top-0 z-50 bg-black border-b border-gray-700 py-4 shadow-md">
-        <div class="max-w-2xl mx-auto flex justify-between items-center px-4">
-            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110" aria-label="Open Sidebar">
+        <div class="max-w-2xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto flex justify-between items-center px-4 lg:px-8">
+            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
                 <i class="fas fa-bars text-gray-100 text-xl"></i>
             </button>
             <h1 id="headerTitle" class="text-lg font-bold text-gray-100"></h1>
@@ -161,44 +159,38 @@
             </button>
         </div>
     </header>
-
-    <main class="max-w-2xl mx-auto px-6 py-8">
+    <main class="max-w-2xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto px-6 py-8 lg:px-8">
         <div class="text-left mb-3">
         </div>
-
         <div class="flex items-center justify-between mb-4">
             <div class="flex-1 relative">
                 <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                     <span class="material-icons text-gray-500 text-lg">search</span>
                 </div>
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search endpoints..." 
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search endpoints..."
                     class="w-full pl-12 pr-4 py-4 text-sm border border-gray-700 bg-black text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-500 rounded-lg shadow-sm transition-all focus:shadow-md"
                     aria-label="Search Endpoints"
                 >
             </div>
         </div>
-
         <div id="content" class="space-y-6">
             <div id="noResults" class="text-center py-16" style="display: none;">
                 <div class="max-w-md mx-auto">
                     <h3 class="text-xs text-gray-500 mb-2">No result found.</h3>
                 </div>
             </div>
-
             <div id="apiList" class="space-y-4"></div>
         </div>
     </main>
-
     <footer class="bg-black border-t border-gray-700 py-6">
-        <div class="max-w-4xl mx-auto px-8 text-center text-gray-500 text-xs">
+        <div class="max-w-4xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto px-8 lg:px-8 text-center text-gray-500 text-xs">
             <p>Thx To All Users And Contributors.</p>
             <p id="footerCopyright"></p>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
@@ -208,8 +200,8 @@
         const notifContent = document.getElementById('notifContent');
         const clearNotificationsBtn = document.getElementById('clearNotifications');
         const notifBadge = document.getElementById('notifBadge');
-
         function toggleSidebar() {
+            if (window.matchMedia('(min-width: 1024px)').matches) return;
             if (sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.remove('-translate-x-full');
                 overlay.classList.remove('hidden');
@@ -219,13 +211,11 @@
                 closeSidebar();
             }
         }
-
         function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
             document.body.style.overflow = '';
         }
-
         function toggleNotifications() {
             if (notificationPanel.classList.contains('hidden')) {
                 notificationPanel.classList.remove('hidden');
@@ -234,7 +224,6 @@
                 notificationPanel.classList.add('hidden');
             }
         }
-
         document.addEventListener('click', (event) => {
             if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
                 closeSidebar();
@@ -254,19 +243,15 @@
                 }
             });
         });
-
         clearNotificationsBtn.addEventListener('click', () => {
             localStorage.setItem('notificationsCleared', 'true');
             notifContent.innerHTML = '<p class="text-xs text-gray-400">No notifications yet.</p>';
             notifBadge.classList.add('hidden');
         });
-
         let searchInput, noResults, apiList;
-
         function toggleEndpoint(endpointIndex) {
             const content = document.getElementById(`endpoint-${endpointIndex}`);
             const icon = document.getElementById(`endpoint-icon-${endpointIndex}`);
-
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
                 content.classList.add('slide-down');
@@ -281,7 +266,6 @@
                 }, 150);
             }
         }
-
         function initializeIndicator(endpointIndex) {
             const getTab = document.getElementById(`tab-get-${endpointIndex}`);
             if (getTab) {
@@ -290,7 +274,6 @@
                 indicator.style.width = getTab.offsetWidth + 'px';
             }
         }
-
         function toggleDropdown(dropdownId) {
             document.querySelectorAll('.custom-dropdown').forEach(dd => {
                 if (dd.id !== dropdownId) {
@@ -306,11 +289,9 @@
                     }
                 }
             });
-
             const button = document.getElementById(`button-${dropdownId}`);
             const options = document.getElementById(`options-${dropdownId}`);
             const willOpen = options.classList.contains('hidden');
-
             if (willOpen) {
                 options.classList.remove('hidden');
                 options.classList.add('slide-down');
@@ -321,14 +302,12 @@
                     options.classList.remove('slide-up', 'slide-down');
                 }, 150);
             }
-
             if (willOpen) {
                 button.classList.add('open');
             } else {
                 button.classList.remove('open');
             }
         }
-
         function selectOption(dropdownId, value, label) {
             const hiddenInput = document.querySelector(`#${dropdownId} input[type="hidden"]`);
             if (hiddenInput) hiddenInput.value = value;
@@ -336,7 +315,6 @@
             if (selectedSpan) selectedSpan.textContent = label;
             toggleDropdown(dropdownId);
         }
-
         function generateExampleCurl(endpointIndex, method) {
             const form = document.getElementById(`form-${endpointIndex}`);
             const onsubmit = form.getAttribute('onsubmit');
@@ -380,13 +358,12 @@
                     }
                 }
                 if (Object.keys(jsonBody).length > 0) {
-                    curl = `curl -X ${method} "${fullUrl}" \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                    curl = `curl -X ${method} "${fullUrl}" \\\n -H "Content-Type: application/json" \\\n -d '${JSON.stringify(jsonBody, null, 2)}'`;
                 }
             }
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
             curlContent.textContent = curl;
         }
-
         function switchMethod(endpointIndex, method) {
             const tabs = ['GET', 'POST']; // Assuming GET and POST
             tabs.forEach(m => {
@@ -406,7 +383,6 @@
                     }
                 }
             });
-
             tabs.forEach(m => {
                 const contents = document.querySelectorAll(`.method-${m.toLowerCase()}-${endpointIndex}`);
                 contents.forEach(el => {
@@ -414,22 +390,18 @@
                     el.querySelectorAll('input, textarea, select').forEach(inp => inp.disabled = m !== method);
                 });
             });
-
             const form = document.getElementById(`form-${endpointIndex}`);
             let onsubmit = form.getAttribute('onsubmit');
             onsubmit = onsubmit.replace(/executeRequest\(event, \d+, '[A-Z]+'/, `executeRequest(event, ${endpointIndex}, '${method}'`);
             form.setAttribute('onsubmit', onsubmit);
-
             generateExampleCurl(endpointIndex, method);
         }
-
         function clearResponse(endpointIndex) {
             const responseElement = document.getElementById(`response-${endpointIndex}`);
             const responseContent = document.getElementById(`response-content-${endpointIndex}`);
             const curlElement = document.getElementById(`curl-${endpointIndex}`);
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
             const clearButton = document.getElementById(`clear-${endpointIndex}`);
-
             responseElement.classList.add('slide-up');
             curlElement.classList.add('slide-up');
             setTimeout(() => {
@@ -442,7 +414,6 @@
                 clearButton.classList.add('hidden');
             }, 150);
         }
-
         function fallbackCopy(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
@@ -460,11 +431,9 @@
             }
             document.body.removeChild(textArea);
         }
-
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
             let text = '';
-
             if (elementId.startsWith('response-content-')) {
                 const headerPres = element.querySelectorAll('.text-gray-400 pre');
                 const headerText = Array.from(headerPres).map(pre => pre.textContent.trim()).join('\n');
@@ -472,14 +441,12 @@
                 const bodyText = bodyPre ? bodyPre.textContent : '';
                 text = headerText + (bodyText ? '\n\n' + bodyText : '');
             } else if (elementId.startsWith('curl-content-')) {
-                text = element.textContent.replace(/\s*\\\n\s*/g, ' \\\n  ').trim();
+                text = element.textContent.replace(/\s*\\\n\s*/g, ' \\\n ').trim();
             }
-
             if (!navigator.clipboard) {
                 fallbackCopy(text);
                 return;
             }
-
             navigator.clipboard.writeText(text).then(() => {
                 console.log('Copied to clipboard');
             }).catch(err => {
@@ -487,22 +454,17 @@
                 fallbackCopy(text);
             });
         }
-
         async function executeRequest(event, endpointIndex, method, path, contentType) {
             event.preventDefault();
-
             const form = event.target;
             const responseElement = document.getElementById(`response-${endpointIndex}`);
             const responseContent = document.getElementById(`response-content-${endpointIndex}`);
             const clearButton = document.getElementById(`clear-${endpointIndex}`);
             const copyResponseButton = document.getElementById(`copy-response-${endpointIndex}`);
-
             let fullUrl = window.location.origin + path;
             const formData = new FormData(form);
-
             const curlElement = document.getElementById(`curl-${endpointIndex}`);
             let curlCommand = `curl -X ${method} "${fullUrl}"`;
-
             for (let [key, value] of formData.entries()) {
                 if (key.startsWith('route_') && value) {
                     const paramName = key.replace('route_', '');
@@ -511,14 +473,12 @@
                     path = path.replace(placeholder, encodeURIComponent(value));
                 }
             }
-
             try {
                 let axiosConfig = {
                     method: method,
                     url: fullUrl,
                     headers: {}
                 };
-
                 if (method === 'GET' || method === 'HEAD') {
                     const params = {};
                     for (let [key, value] of formData.entries()) {
@@ -550,7 +510,7 @@
                         if (formFields.length > 0) {
                             axiosConfig.data = newFormData;
                             axiosConfig.headers['Content-Type'] = 'multipart/form-data';
-                            curlCommand += ` \\\n  ${formFields.join(' \\\n  ')}`;
+                            curlCommand += ` \\\n ${formFields.join(' \\\n ')}`;
                         }
                     } else if (contentType === 'application/json') {
                         const bodyTextarea = form.querySelector('textarea[name="body"]');
@@ -559,7 +519,7 @@
                                 const jsonBody = JSON.parse(bodyTextarea.value);
                                 axiosConfig.headers['Content-Type'] = 'application/json';
                                 axiosConfig.data = jsonBody;
-                                curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                                curlCommand += ` \\\n -H "Content-Type: application/json" \\\n -d '${JSON.stringify(jsonBody, null, 2)}'`;
                             } catch (e) {
                                 throw new Error('Invalid JSON in request body');
                             }
@@ -573,7 +533,7 @@
                             if (Object.keys(jsonBody).length > 0) {
                                 axiosConfig.headers['Content-Type'] = 'application/json';
                                 axiosConfig.data = jsonBody;
-                                curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                                curlCommand += ` \\\n -H "Content-Type: application/json" \\\n -d '${JSON.stringify(jsonBody, null, 2)}'`;
                             }
                         }
                     } else {
@@ -586,29 +546,24 @@
                         if (Object.keys(jsonBody).length > 0) {
                             axiosConfig.headers['Content-Type'] = 'application/json';
                             axiosConfig.data = jsonBody;
-                            curlCommand += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(jsonBody, null, 2)}'`;
+                            curlCommand += ` \\\n -H "Content-Type: application/json" \\\n -d '${JSON.stringify(jsonBody, null, 2)}'`;
                         }
                     }
                 }
-
                 const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
                 curlContent.textContent = curlCommand;
                 curlElement.classList.remove('hidden');
                 curlElement.classList.add('slide-down');
-
                 responseContent.innerHTML = '<span class="text-white">Loading...</span>';
                 responseElement.classList.remove('hidden');
                 responseElement.classList.add('slide-down');
-
                 const response = await axios(axiosConfig);
                 const responseContentType = response.headers['content-type'] || '';
-
                 const headerHtml = `<div class="text-gray-400 text-xs mb-3">
                     <pre>Method: ${method}</pre>
                     <pre>URL: ${fullUrl}</pre>
                     <pre>Status: ${response.status} ${response.statusText}</pre>
                 </div>`;
-
                 if (responseContentType.includes('application/json')) {
                     const jsonString = JSON.stringify(response.data, null, 2);
                     const escapedJsonString = jsonString
@@ -617,7 +572,6 @@
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
-
                     responseContent.innerHTML = headerHtml + `<pre class="text-white">${escapedJsonString}</pre>`;
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
@@ -630,11 +584,11 @@
                         <img src="${imageUrl}" alt="Response Image" class="max-w-full h-auto rounded">
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => { 
-                        const a = document.createElement('a'); 
-                        a.href = imageUrl; 
-                        a.download = 'image'; 
-                        a.click(); 
+                    copyResponseButton.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = imageUrl;
+                        a.download = 'image';
+                        a.click();
                     };
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
                 } else if (responseContentType.includes('audio/')) {
@@ -649,11 +603,11 @@
                         </audio>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => { 
-                        const a = document.createElement('a'); 
-                        a.href = audioUrl; 
-                        a.download = 'audio'; 
-                        a.click(); 
+                    copyResponseButton.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = audioUrl;
+                        a.download = 'audio';
+                        a.click();
                     };
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
                 } else if (responseContentType.includes('video/')) {
@@ -668,11 +622,11 @@
                         </video>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => { 
-                        const a = document.createElement('a'); 
-                        a.href = videoUrl; 
-                        a.download = 'video'; 
-                        a.click(); 
+                    copyResponseButton.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = videoUrl;
+                        a.download = 'video';
+                        a.click();
                     };
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
                 } else if (responseContentType.includes('application/pdf')) {
@@ -684,11 +638,11 @@
                         <iframe src="${pdfUrl}" class="w-full h-64 border border-gray-600 mb-3 rounded"></iframe>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => { 
-                        const a = document.createElement('a'); 
-                        a.href = pdfUrl; 
-                        a.download = 'document.pdf'; 
-                        a.click(); 
+                    copyResponseButton.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = pdfUrl;
+                        a.download = 'document.pdf';
+                        a.click();
                     };
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
                 } else {
@@ -700,7 +654,6 @@
             } catch (error) {
                 let errorMessage = error.message;
                 let statusInfo = 'Error';
-
                 if (error.response) {
                     statusInfo = `${error.response.status} ${error.response.statusText}`;
                     if (error.response.data && typeof error.response.data === 'object') {
@@ -711,7 +664,6 @@
                 } else if (error.request) {
                     errorMessage = 'Network Error: ' + error.message;
                 }
-
                 responseContent.innerHTML = `
                     <div class="text-gray-400 text-xs mb-3">
                         <pre>Method: ${method}</pre>
@@ -727,18 +679,14 @@
                 clearButton.classList.remove('hidden');
             }
         }
-
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const apiItems = document.querySelectorAll('.api-item');
             let visibleCount = 0;
-
             apiItems.forEach(item => {
                 const path = item.getAttribute('data-path').toLowerCase();
                 const alias = item.getAttribute('data-alias').toLowerCase();
-
                 const searchMatch = path.includes(searchTerm) || alias.includes(searchTerm);
-
                 if (searchMatch) {
                     item.style.display = 'block';
                     visibleCount++;
@@ -746,7 +694,6 @@
                     item.style.display = 'none';
                 }
             });
-
             if (visibleCount === 0 && apiItems.length > 0) {
                 noResults.style.display = 'block';
                 apiList.style.display = 'none';
@@ -755,7 +702,6 @@
                 apiList.style.display = 'block';
             }
         }
-
         async function loadCategory() {
             const loader = document.getElementById('loader');
             try {
@@ -765,7 +711,6 @@
                 document.querySelector('meta[property="og:description"]').content = setData.description;
                 document.querySelector('link[rel="icon"]').href = setData.icon;
                 document.getElementById('footerCopyright').textContent = `© ${setData.name}. | All Rights Reserved.`;
-
                 // Notifications
                 const cleared = localStorage.getItem('notificationsCleared') === 'true';
                 const notifications = cleared ? [] : (setData.notification || []);
@@ -783,7 +728,6 @@
                     notifHtml = '<p class="text-xs text-gray-400">No notifications yet.</p>';
                 }
                 notifContent.innerHTML = notifHtml;
-
                 const catPath = location.pathname.replace('/category/', '').toLowerCase();
                 const res = await fetch('/endpoints');
                 const { endpoints } = await res.json();
@@ -812,7 +756,7 @@
                         tabsHtml = `<div class="tab-container border-b border-gray-700 mb-4"><div class="flex relative">`;
                         methods.forEach((m, idx) => {
                             tabsHtml += `
-                                <button 
+                                <button
                                     type="button"
                                     onclick="switchMethod(${index}, '${m}')"
                                     id="tab-${m.toLowerCase()}-${index}"
@@ -837,7 +781,7 @@
                                 } else {
                                     optionsArr.unshift({value: '', label: defaultLabel});
                                 }
-                                let selectedValue = p.required 
+                                let selectedValue = p.required
                                     ? (p.example && p.options.includes(p.example) ? p.example : (p.options[0] || ''))
                                     : (p.example && p.options.includes(p.example) ? p.example : '');
                                 let selectedLabel = optionsArr.find(opt => opt.value === selectedValue)?.label || defaultLabel;
@@ -923,10 +867,10 @@
                                             ${formHtml}
                                         </div>
                                         <div class="mb-3 method-content method-post-${index}" style="${postStyle}">
-                                            <textarea 
-                                                name="body" 
-                                                rows="8" 
-                                                class="w-full px-3 py-2 border border-gray-700 bg-black text-sm focus:outline-none focus:border-purple-500 text-gray-100 placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-sm resize-none" 
+                                            <textarea
+                                                name="body"
+                                                rows="8"
+                                                class="w-full px-3 py-2 border border-gray-700 bg-black text-sm focus:outline-none focus:border-purple-500 text-gray-100 placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-sm resize-none"
                                                 placeholder="Enter JSON body here...">${bodyExample}</textarea>
                                             <div class="text-xs text-gray-500 mt-1">
                                                 Modify the JSON structure above as needed for your request.
@@ -1051,7 +995,6 @@
                     generateExampleCurl(index, methods[0]);
                     index++;
                 }
-
                 let sidebarHtml = `
                     <a href="/docs" class="flex items-center px-3 py-2 text-gray-100 hover:bg-gray-700 rounded-md transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-gray-700' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-purple-400">
@@ -1089,14 +1032,11 @@
                 loader.classList.add('hidden');
             }
         }
-
         window.addEventListener('load', () => {
             searchInput = document.getElementById('searchInput');
             noResults = document.getElementById('noResults');
             apiList = document.getElementById('apiList');
-
             searchInput.addEventListener('input', applyFilters);
-
             loadCategory();
         });
     </script>

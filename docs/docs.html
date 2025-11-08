@@ -30,8 +30,10 @@
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            display: none !important;
+        @media (max-width: 767px) {
+            ::-webkit-scrollbar {
+                display: none !important;
+            }
         }
         /* Loader styles */
         #loader {
@@ -93,9 +95,8 @@
         <div class="spinner"></div>
         <span class="loading-text">Loading</span>
     </div>
-
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-gray-700">
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-gray-700">
         <div class="py-4 px-4 flex justify-between items-center border-b border-gray-700">
             <h3 class="text-lg font-semibold text-gray-100">API Categories</h3>
             <button onclick="closeSidebar()" class="text-gray-400 hover:text-gray-100" aria-label="Close Sidebar">
@@ -104,10 +105,8 @@
         </div>
         <div id="sidebarContent" class="pt-4 px-4 space-y-3"></div>
     </div>
-
     <!-- Overlay -->
-    <div id="overlay" class="fixed inset-0 bg-black/50 hidden z-[50]" onclick="closeSidebar()"></div>
-
+    <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
     <!-- Notification Panel -->
     <div id="notificationPanel" class="hidden fixed top-12 right-4 bg-black border border-gray-700 p-4 z-[60] shadow-xl rounded-lg w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-3">
@@ -116,10 +115,9 @@
         </div>
         <div id="notifContent" class="space-y-3"></div>
     </div>
-
     <header class="sticky top-0 z-50 bg-black border-b border-gray-700 py-4 shadow-md">
-        <div class="max-w-2xl mx-auto flex justify-between items-center px-4">
-            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110" aria-label="Open Sidebar">
+        <div class="max-w-2xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto flex justify-between items-center px-4 lg:px-8">
+            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
                 <i class="fas fa-bars text-gray-100 text-xl"></i>
             </button>
             <h1 class="text-lg font-bold text-gray-100">Dashboard</h1>
@@ -129,8 +127,7 @@
             </button>
         </div>
     </header>
-
-    <main class="max-w-2xl mx-auto px-6 py-8">
+    <main class="max-w-2xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto px-6 py-8 lg:px-8">
         <div class="text-center mb-8">
             <img id="headerImage" src="" alt="Header" class="mx-auto rounded-xl mb-6 w-[80%] md:w-[40%] lg:w-[40%]">
             <h2 id="apiTitle" class="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text"></h2>
@@ -140,7 +137,6 @@
                 <span id="apiStatus"></span>
             </div>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="bg-black rounded-lg p-4 border border-gray-700 shadow-xl transition-all hover:shadow-2xl">
                 <div class="flex justify-between items-start mb-2">
@@ -164,14 +160,12 @@
             </div>
         </div>
     </main>
-
     <footer class="bg-black border-t border-gray-700 py-6">
-        <div class="max-w-4xl mx-auto px-8 text-center text-gray-500 text-xs">
+        <div class="max-w-4xl mx-auto lg:ml-64 lg:max-w-[calc(100%-16rem)] lg:mr-auto px-8 lg:px-8 text-center text-gray-500 text-xs">
             <p>Thx To All Users And Contributors.</p>
             <p id="footerCopyright"></p>
         </div>
     </footer>
-
     <script>
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -180,8 +174,8 @@
         const notifContent = document.getElementById('notifContent');
         const clearNotificationsBtn = document.getElementById('clearNotifications');
         const notifBadge = document.getElementById('notifBadge');
-
         function toggleSidebar() {
+            if (window.matchMedia('(min-width: 1024px)').matches) return;
             if (sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.remove('-translate-x-full');
                 overlay.classList.remove('hidden');
@@ -191,13 +185,11 @@
                 closeSidebar();
             }
         }
-
         function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
             document.body.style.overflow = '';
         }
-
         function toggleNotifications() {
             if (notificationPanel.classList.contains('hidden')) {
                 notificationPanel.classList.remove('hidden');
@@ -206,26 +198,22 @@
                 notificationPanel.classList.add('hidden');
             }
         }
-
         document.addEventListener('click', (event) => {
             if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
                 closeSidebar();
                 notificationPanel.classList.add('hidden');
             }
         });
-
         clearNotificationsBtn.addEventListener('click', () => {
             localStorage.setItem('notificationsCleared', 'true');
             notifContent.innerHTML = '<p class="text-xs text-gray-400">No notifications yet.</p>';
             notifBadge.classList.add('hidden');
         });
-
         window.addEventListener('load', async () => {
             const loader = document.getElementById('loader');
             try {
                 const setRes = await fetch('/set');
                 const setData = await setRes.json();
-
                 document.title = setData.name;
                 document.querySelector('meta[name="description"]').content = setData.description;
                 document.querySelector('meta[property="og:title"]').content = setData.name;
@@ -236,7 +224,6 @@
                 document.getElementById('headerImage').src = setData.header.imageSrc[0];
                 document.getElementById('apiStatus').textContent = setData.header.status;
                 document.getElementById('footerCopyright').textContent = `© ${setData.name} | All Rights Reserved.`;
-
                 // Notifications
                 const cleared = localStorage.getItem('notificationsCleared') === 'true';
                 const notifications = cleared ? [] : (setData.notification || []);
@@ -254,14 +241,11 @@
                     notifHtml = '<p class="text-xs text-gray-400">No notifications yet.</p>';
                 }
                 notifContent.innerHTML = notifHtml;
-
                 const endpointsRes = await fetch('/endpoints');
                 const endpointsData = await endpointsRes.json();
                 const endpoints = endpointsData.endpoints;
-
                 document.getElementById('totalEndpoints').textContent = endpointsData.count;
                 document.getElementById('totalCategories').textContent = endpoints.length;
-
                 let sidebarHtml = `
                     <a href="/docs" class="flex items-center px-3 py-2 text-gray-100 hover:bg-gray-700 rounded-md transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-gray-700' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-purple-400">

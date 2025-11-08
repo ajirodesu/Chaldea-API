@@ -30,8 +30,10 @@
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            display: none !important;
+        @media (max-width: 767px) {
+            ::-webkit-scrollbar {
+                display: none !important;
+            }
         }
         /* Loader styles */
         #loader {
@@ -107,14 +109,12 @@
         <div class="spinner"></div>
         <span class="loading-text">Loading</span>
     </div>
-
     <header class="sticky top-0 z-50 bg-black border-b border-gray-700 py-4 shadow-md">
-        <div class="max-w-2xl mx-auto flex justify-center items-center px-4">
+        <div class="max-w-2xl lg:max-w-5xl mx-auto flex justify-center items-center px-4 lg:px-8">
             <h1 id="headerTitle" class="text-lg font-bold text-gray-100"></h1>
         </div>
     </header>
-
-    <main class="max-w-2xl mx-auto px-6 py-8">
+    <main class="max-w-2xl lg:max-w-5xl mx-auto px-6 py-8 lg:px-8">
         <section id="introduction" class="mb-12 text-center flex flex-col items-center">
             <img id="headerImage" src="" alt="Header" class="mx-auto rounded-xl mb-6 w-[80%] md:w-[40%] lg:w-[40%]">
             <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Welcome to <span id="apiName"></span></h2>
@@ -132,7 +132,6 @@
                 <a href="#getting-started" class="bg-black border border-gray-700 text-gray-100 px-6 py-2 rounded-lg font-semibold text-sm transition-all hover:border-purple-500 hover:shadow-lg">Learn More</a>
             </div>
         </section>
-
         <section id="getting-started" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Getting Started</h2>
             <div class="bg-black border border-gray-700 rounded-lg p-4 shadow-md transition-all hover:shadow-xl">
@@ -161,7 +160,6 @@
                 </ol>
             </div>
         </section>
-
         <section id="terms-of-service" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">Terms of Service</h2>
             <div class="bg-black border border-gray-700 rounded-lg p-4 shadow-md transition-all hover:shadow-xl">
@@ -180,19 +178,16 @@
                 </p>
             </div>
         </section>
-
         <div class="text-center mt-8 mb-12">
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-gradient-to-r from-purple-600 to-purple-400 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all hover:opacity-90 hover:shadow-lg">Back to Top</button>
         </div>
     </main>
-
     <footer class="bg-black border-t border-gray-700 py-6">
-        <div class="max-w-4xl mx-auto px-8 text-center text-gray-500 text-xs">
+        <div class="max-w-2xl lg:max-w-5xl mx-auto px-8 lg:px-8 text-center text-gray-500 text-xs">
             <p>Thx To All Users And Contributors.</p>
             <p id="footerCopyright"></p>
         </div>
     </footer>
-
     <script>
         window.addEventListener('load', async () => {
             const loader = document.getElementById('loader');
@@ -203,7 +198,6 @@
                 document.querySelector('meta[property="og:description"]').content = setData.description;
                 document.querySelector('link[rel="icon"]').href = setData.icon;
                 document.getElementById('footerCopyright').textContent = `© ${setData.name}. | All Rights Reserved.`;
-
                 document.title = setData.name;
                 document.querySelector('meta[property="og:title"]').content = setData.name;
                 document.getElementById('headerTitle').textContent = setData.name;
@@ -211,7 +205,6 @@
                 document.getElementById('headerImage').src = setData.header.imageSrc[0];
                 document.getElementById('apiName').textContent = setData.name;
                 document.getElementById('apiNameTerms').textContent = setData.name;
-
                 const res = await fetch('/endpoints');
                 const { endpoints, count } = await res.json();
                 document.getElementById('totalEndpoints').textContent = count;
