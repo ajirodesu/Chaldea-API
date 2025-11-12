@@ -814,7 +814,7 @@
                                         ${p.name} ${p.required ? '<span class="text-red-400">*</span>' : ''}
                                     </label>
                                     <div class="text-xs text-gray-500 mb-1">
-                                        ${p.description}
+                                        ${p.desc || p.description || ''}
                                     </div>
                                     ${inputHtml}
                                 </div>
@@ -853,7 +853,7 @@
                                     <span class="material-icons text-sm mr-1">info</span>
                                     DESCRIPTION
                                 </div>
-                                <p class="text-xs text-gray-400 mb-4">${item.desc}</p>
+                                <p class="text-xs text-gray-400 mb-4">${item.desc || item.description || ''}</p>
                             </div>
                             <div>
                                 <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">

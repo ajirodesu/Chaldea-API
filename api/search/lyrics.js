@@ -8,13 +8,13 @@ const meta = {
   params: [
     {
       name: 'artist',
-      description: 'The artist of the song',
+      desc: 'The artist of the song',
       example: 'Taylor Swift',
       required: true
     }, 
     { 
       name: 'song',
-      description: 'The title of the song',
+      desc: 'The title of the song',
       example: 'Enchanted',
       required: true
     }

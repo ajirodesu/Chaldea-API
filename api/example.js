@@ -7,7 +7,7 @@ const meta = {
   params: [
     {
       name: 'text',
-      description: 'Input your text here',
+      desc: 'Input your text here',
       example: 'Hello, world!',
       required: true
     }
