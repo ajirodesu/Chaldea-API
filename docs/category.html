@@ -26,9 +26,9 @@
                         'sans': ['Inter', 'system-ui', 'sans-serif']
                     },
                     colors: {
-                        'premium-purple': '#7C3AED',
-                        'premium-violet': '#A78BFA',
-                        'neutral-dark': '#1F2937',
+                        'premium-yellow': '#FBBF24',
+                        'premium-orange': '#F97316',
+                        'neutral-dark': '#333333',
                         'neutral-light': '#D1D5DB'
                     }
                 }
@@ -60,22 +60,21 @@
             opacity: 0;
             pointer-events: none;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #4b5563;
-            border-top: 4px solid #9333ea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
         .loading-text {
             margin-top: 16px;
             font-size: 1.25rem;
             color: #d1d5db;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
         }
         .loading-text::after {
             display: inline-block;
@@ -116,7 +115,7 @@
             position: absolute;
             bottom: 0;
             height: 2px;
-            background-color: #9333ea;
+            background-color: #F97316;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .custom-dropdown button svg {
@@ -132,31 +131,50 @@
             opacity: 0.6;
         }
         body {
-            background-image: 
-                repeating-linear-gradient(0deg, transparent 0px, transparent 49px, rgba(255,255,255,0.1) 49px, rgba(255,255,255,0.1) 50px),
-                repeating-linear-gradient(90deg, transparent 0px, transparent 49px, rgba(255,255,255,0.1) 49px, rgba(255,255,255,0.1) 50px);
-            background-size: 100% 100%;
-            background-color: #000000;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            z-index: -1;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
         .bg-gradient-premium {
-            background: linear-gradient(to right, #7C3AED, #A78BFA);
+            background: linear-gradient(to right, #FBBF24, #F97316);
         }
         .hover\:shadow-premium:hover {
-            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
         }
         .text-premium {
             color: #D1D5DB;
         }
+        main {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        main.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
-<body class="bg-black text-premium antialiased font-mono min-h-screen">
+<body class="bg-[#000000] text-premium antialiased font-mono min-h-screen">
     <!-- Loader -->
     <div id="loader">
-        <div class="spinner"></div>
         <span class="loading-text">Loading</span>
     </div>
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-black z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-[#000000] z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
         <div class="py-4 px-4 flex justify-between items-center border-b border-neutral-dark">
             <h3 class="text-lg font-semibold text-white">API Categories</h3>
             <button onclick="closeSidebar()" class="text-gray-400 hover:text-white lg:hidden" aria-label="Close Sidebar">
@@ -168,14 +186,14 @@
     <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
     <!-- Notification Panel -->
-    <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-black border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
+    <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-[#000000] border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-base font-semibold text-white">Notifications</h4>
-            <button id="clearNotifications" class="text-premium-purple text-sm font-medium hover:text-premium-violet transition-colors">Mark all as read</button>
+            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium hover:text-premium-orange transition-colors">Mark all as read</button>
         </div>
         <div id="notifContent" class="space-y-4"></div>
     </div>
-    <header class="sticky top-0 z-50 bg-black border-b border-neutral-dark py-4 shadow-md">
+    <header class="sticky top-0 z-50 bg-[#000000] border-b border-neutral-dark py-4 shadow-md">
         <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto flex items-center px-4 lg:px-0 relative">
             <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
                 <i class="fas fa-bars text-white text-xl"></i>
@@ -201,7 +219,7 @@
                     type="text"
                     id="searchInput"
                     placeholder="Search endpoints..."
-                    class="w-full pl-12 pr-4 py-4 text-sm border border-neutral-dark bg-black text-white placeholder-gray-500 focus:outline-none focus:border-premium-purple rounded-lg shadow-sm transition-all focus:shadow-premium"
+                    class="w-full pl-12 pr-4 py-4 text-sm border border-neutral-dark bg-[#000000] text-white placeholder-gray-500 focus:outline-none focus:border-premium-yellow rounded-lg shadow-sm transition-all focus:shadow-premium"
                     aria-label="Search Endpoints"
                 >
             </div>
@@ -215,7 +233,7 @@
             <div id="apiList" class="space-y-6"></div>
         </div>
     </main>
-    <footer class="bg-black border-t border-neutral-dark py-6 relative z-10 w-full">
+    <footer class="bg-[#000000] border-t border-neutral-dark py-6 relative z-10 w-full">
         <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
@@ -227,13 +245,13 @@
                 <div>
                     <h3 class="font-semibold text-white mb-3">Connect</h3>
                     <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-telegram-plane text-lg"></i>
                         </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-facebook-messenger text-lg"></i>
                         </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-github text-lg"></i>
                         </a>
                     </div>
@@ -795,6 +813,7 @@
         }
         async function loadCategory() {
             const loader = document.getElementById('loader');
+            const main = document.querySelector('main');
             try {
                 const setRes = await fetch('/set');
                 const setData = await setRes.json();
@@ -806,7 +825,7 @@
                 document.getElementById('messengerLink').href = setData.messenger;
                 document.getElementById('githubLink').href = setData.github;
                 const aboutText = document.getElementById('aboutText');
-                
+
                 notifs = setData.notification || [];
                 updateNotifPanel();
                 const catPath = location.pathname.replace('/category/', '').toLowerCase();
@@ -868,26 +887,26 @@
                                 let selectedLabel = optionsArr.find(opt => opt.value === selectedValue)?.label || defaultLabel;
                                 const dropdownId = `dropdown-${index}-${pIndex}`;
                                 const optionsHtml = optionsArr.map(opt => `
-                                    <button type="button" onclick="selectOption('${dropdownId}', '${opt.value}', '${opt.label}')" class="w-full px-3 py-2 text-sm text-white hover:bg-neutral-dark transition-all text-left ${opt.value === '' ? 'text-gray-500' : ''}">
+                                    <button type="button" onclick="selectOption('${dropdownId}', '${opt.value}', '${opt.label}')" class="w-full px-3 py-2 text-sm text-white hover:bg-[#000000] transition-all text-left ${opt.value === '' ? 'text-gray-500' : ''}">
                                         ${opt.label}
                                     </button>
                                 `).join('');
                                 inputHtml = `
                                     <div class="relative custom-dropdown" id="${dropdownId}">
                                         <input type="hidden" name="${paramName}" value="${selectedValue}">
-                                        <button id="button-${dropdownId}" type="button" onclick="toggleDropdown('${dropdownId}')" class="w-full px-3 py-2 border border-neutral-dark bg-black text-sm text-white rounded-lg transition-all focus:shadow-premium focus:outline-none focus:border-premium-purple flex justify-between items-center">
+                                        <button id="button-${dropdownId}" type="button" onclick="toggleDropdown('${dropdownId}')" class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm text-white rounded-lg transition-all focus:shadow-premium focus:outline-none focus:border-premium-yellow flex justify-between items-center">
                                             <span id="selected-${dropdownId}">${selectedLabel}</span>
                                             <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
-                                        <div id="options-${dropdownId}" class="dropdown-options hidden absolute w-full bg-black border border-neutral-dark rounded-lg mt-1 z-10 max-h-40 overflow-y-auto shadow-lg">
+                                        <div id="options-${dropdownId}" class="dropdown-options hidden absolute w-full bg-[#000000] border border-neutral-dark rounded-lg mt-1 z-10 max-h-40 overflow-y-auto shadow-lg">
                                             ${optionsHtml}
                                         </div>
                                     </div>
                                 `;
                             } else {
-                                inputHtml = `<input type="text" name="${paramName}" class="w-full px-3 py-2 border border-neutral-dark bg-black text-sm focus:outline-none focus:border-premium-purple text-white placeholder:text-gray-500 rounded-lg transition-all focus:shadow-premium" placeholder="${p.example || ''}" ${p.required ? 'required' : ''}>`;
+                                inputHtml = `<input type="text" name="${paramName}" class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm focus:outline-none focus:border-premium-yellow text-white placeholder:text-gray-500 rounded-lg transition-all focus:shadow-premium" placeholder="${p.example || ''}" ${p.required ? 'required' : ''}>`;
                             }
                             return `
                                 <div>
@@ -906,13 +925,13 @@
                     let getStyle = methods.length > 1 ? '' : (methods[0] === 'GET' ? 'display: block;' : 'display: none;');
                     let postStyle = methods.length > 1 ? 'display: none;' : (methods[0] === 'POST' ? 'display: block;' : 'display: none;');
                     const div = document.createElement('div');
-                    div.classList.add('bg-black', 'border', 'border-neutral-dark', 'api-item', 'hover:border-premium-purple', 'rounded-xl', 'overflow-hidden', 'shadow-md', 'transition-all', 'hover:shadow-premium');
+                    div.classList.add('bg-[#000000]', 'border', 'border-neutral-dark', 'api-item', 'hover:border-premium-yellow', 'rounded-xl', 'overflow-hidden', 'shadow-md', 'transition-all', 'hover:shadow-premium');
                     div.dataset.method = methodStr;
                     div.dataset.path = basePath;
                     div.dataset.alias = alias;
                     div.innerHTML = `
                         <button onclick="toggleEndpoint(${index})" class="w-full text-left">
-                            <div class="px-5 py-3.5 flex items-center justify-between gap-3 bg-black">
+                            <div class="px-5 py-3.5 flex items-center justify-between gap-3 bg-[#000000]">
                                 <div class="flex items-center min-w-0 flex-1 gap-3">
                                     <span class="inline-block px-2.5 py-1 text-xs font-semibold text-white flex-shrink-0 rounded bg-gradient-premium transition-all hover:opacity-90">
                                         ${methodStr}
@@ -924,11 +943,11 @@
                                 </div>
                             </div>
                             <div class="px-5 border-t border-neutral-dark"></div>
-                            <div class="px-5 pb-3 bg-black">
+                            <div class="px-5 pb-3 bg-[#000000]">
                                 <span class="text-xs text-gray-500 block pt-2.5 font-mono" title="${basePath}">${basePath}</span>
                             </div>
                         </button>
-                        <div id="endpoint-${index}" class="hidden bg-black px-5 pt-3 pb-8 border-t border-neutral-dark rounded-b-xl">
+                        <div id="endpoint-${index}" class="hidden bg-[#000000] px-5 pt-3 pb-8 border-t border-neutral-dark rounded-b-xl">
                             <div>
                                 <div class="text-neutral-light font-bold text-xs mb-2 flex items-center">
                                     <span class="material-icons text-sm mr-1">info</span>
@@ -951,7 +970,7 @@
                                             <textarea
                                                 name="body"
                                                 rows="8"
-                                                class="w-full px-3 py-2 border border-neutral-dark bg-black text-sm focus:outline-none focus:border-premium-purple text-white placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-premium resize-none"
+                                                class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm focus:outline-none focus:border-premium-yellow text-white placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-premium resize-none"
                                                 placeholder="Enter JSON body here...">${bodyExample}</textarea>
                                             <div class="text-xs text-gray-500 mt-2">
                                                 Modify the JSON structure above as needed for your request.
@@ -960,7 +979,7 @@
                                         <button type="submit" class="bg-gradient-premium hover:opacity-90 font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
                                             Execute
                                         </button>
-                                        <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden bg-black border border-neutral-dark hover:border-premium-purple font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 ml-2 rounded-lg">
+                                        <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden bg-[#000000] border border-neutral-dark hover:border-premium-yellow font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 ml-2 rounded-lg">
                                             Clear
                                         </button>
                                     </form>
@@ -976,8 +995,8 @@
                                         <span class="material-icons text-sm">content_copy</span>
                                     </button>
                                 </div>
-                                <div class="bg-black border border-neutral-dark text-white text-xs p-4 rounded-lg">
-                                    <div class="bg-black max-h-80 overflow-auto" id="response-content-${index}"></div>
+                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs p-4 rounded-lg">
+                                    <div class="bg-[#000000] max-h-80 overflow-auto" id="response-content-${index}"></div>
                                 </div>
                             </div>
                             <div id="curl-${index}" class="mt-6">
@@ -990,84 +1009,8 @@
                                         <span class="material-icons text-sm">content_copy</span>
                                     </button>
                                 </div>
-                                <div class="bg-black border border-neutral-dark text-white text-xs p-4 rounded-lg">
+                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs p-4 rounded-lg">
                                     <pre class="text-white whitespace-pre-wrap overflow-auto max-h-40" id="curl-content-${index}"></pre>
-                                </div>
-                            </div>
-                            <div class="mt-6 space-y-6">
-                                <div>
-                                    <div class="text-neutral-light font-bold text-xs mb-2 flex items-center">
-                                        <span class="material-icons text-sm mr-1">list</span>
-                                        HTTP STATUS CODES
-                                    </div>
-                                    <div class="bg-black border border-neutral-dark rounded-lg overflow-hidden">
-                                        <div class="overflow-x-auto">
-                                            <table class="w-full text-xs">
-                                                <thead class="bg-gray-800 border-b border-neutral-dark">
-                                                    <tr>
-                                                        <th class="px-4 py-2 text-left font-semibold text-neutral-light">Code</th>
-                                                        <th class="px-4 py-2 text-left font-semibold text-neutral-light">Description</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="divide-y divide-neutral-dark">
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-green-400 text-sm mr-2">check_circle</span>
-                                                                <span class="font-mono font-semibold text-green-400">200</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">OK - Request successful</td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
-                                                                <span class="font-mono font-semibold text-red-400">400</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">Bad Request - Invalid parameters or missing required fields</td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
-                                                                <span class="font-mono font-semibold text-red-400">404</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">Not Found - Resource not found</td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
-                                                                <span class="font-mono font-semibold text-red-400">405</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">Method Not Allowed - HTTP method not supported</td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-yellow-400 text-sm mr-2">warning</span>
-                                                                <span class="font-mono font-semibold text-yellow-400">429</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">Too Many Requests - Rate limit exceeded</td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-800 transition-all">
-                                                        <td class="px-4 py-2">
-                                                            <div class="flex items-center">
-                                                                <span class="material-icons text-red-400 text-sm mr-2">error</span>
-                                                                <span class="font-mono font-semibold text-red-400">500</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 text-gray-400">Internal Server Error - Server encountered an error</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1077,8 +1020,8 @@
                     index++;
                 }
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-neutral-dark rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-neutral-dark' : ''}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-purple">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
                         Dashboard
@@ -1091,9 +1034,9 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-neutral-dark rounded-xl transition-all hover:shadow-sm ${active ? 'bg-neutral-dark' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#000000]' : ''}">
                             <div class="flex items-center">
-                                <i class="fas fa-folder mr-3 text-premium-purple"></i>
+                                <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
                             </div>
                             <i class="material-icons text-lg text-gray-400">keyboard_arrow_right</i>
@@ -1116,6 +1059,7 @@
                 setInterval(updateNotifPanel, 60000);
             } finally {
                 loader.classList.add('hidden');
+                main.classList.add('loaded');
             }
         }
         window.addEventListener('load', () => {
