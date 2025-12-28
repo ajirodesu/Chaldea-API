@@ -16,7 +16,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
@@ -27,7 +27,7 @@
                 extend: {
                     fontFamily: {
                         'mono': ['Ubuntu Mono', 'monospace'],
-                        'sans': ['Ubuntu Mono', 'monospace']
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
                     },
                     colors: {
                         'premium-yellow': '#FBBF24',
@@ -151,7 +151,7 @@
         }
     </style>
 </head>
-<body class="bg-[#000000] text-premium antialiased font-mono min-h-screen">
+<body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
     <!-- Loader -->
     <div id="loader">
         <span class="loading-text">Loading</span>
@@ -331,19 +331,19 @@
                 <div>
                     <h3 class="font-semibold text-white mb-3">Connect</h3>
                     <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-telegram-plane text-lg"></i>
                         </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-facebook-messenger text-lg"></i>
                         </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-github text-lg"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="pt-8 border-t border-neutral-dark">
+            <div class="pt-8 border-t border-gray-800 text-left">
                 <p class="text-sm text-gray-500" id="footerCopyright"></p>
             </div>
         </div>

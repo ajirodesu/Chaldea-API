@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Internal server error. Return to the dashboard for API documentation and tools.">
+    <meta name="description" content="Error 500 - Internal Server Error. An unexpected error occurred on the server.">
     <meta name="theme-color" content="#000000">
     <meta name="robots" content="index, follow">
-    <meta name="keywords" content="API documentation, RESTful APIs, developer tools, dark theme API dashboard">
-    <meta property="og:title" content="500 - Internal Server Error">
-    <meta property="og:description" content="Internal server error. Return to the dashboard for API documentation and tools.">
+    <meta name="keywords" content="Error 500, Internal Server Error, API documentation error">
+    <meta property="og:title" content="Error 500 - Internal Server Error">
+    <meta property="og:description" content="An internal error occurred. Please try again later or contact support.">
     <meta property="og:type" content="website">
-    <title>500 - Internal Server Error</title>
+    <title>Error 500 - Internal Server Error</title>
     <link rel="icon" href="" type="image/png">
-    <link rel="canonical" href="/500">
+    <link rel="canonical" href="/">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -24,25 +28,331 @@
                     fontFamily: {
                         'mono': ['Ubuntu Mono', 'monospace'],
                         'sans': ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    colors: {
+                        'premium-yellow': '#FBBF24',
+                        'premium-orange': '#F97316',
+                        'neutral-dark': '#333333',
+                        'neutral-light': '#D1D5DB'
                     }
                 }
             }
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            display: none !important;
+        @media (max-width: 767px) {
+            ::-webkit-scrollbar {
+                display: none !important;
+            }
+        }
+        /* Loader styles */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-text {
+            margin-top: 16px;
+            font-size: 1.25rem;
+            color: #d1d5db;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+        .loading-text::after {
+            display: inline-block;
+            content: '...';
+            animation: loading-dots 1.5s steps(4, end) infinite;
+            width: 1em;
+        }
+        @keyframes loading-dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
         }
         .transition-all {
             transition: all 0.3s ease;
         }
+        .notification-item {
+            transition: opacity 0.3s ease;
+        }
+        .notification-item.read {
+            opacity: 0.6;
+        }
+        body {
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            z-index: -1;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+        .bg-gradient-premium {
+            background: linear-gradient(to right, #FBBF24, #F97316);
+        }
+        .hover\:shadow-premium:hover {
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
+        .text-premium {
+            color: #D1D5DB;
+        }
+        main {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        main.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background-color: #F97316;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        pre code.hljs {
+            background: transparent !important;
+            padding: 0 !important;
+        }
     </style>
 </head>
-<body class="bg-black text-gray-200 antialiased font-mono min-h-screen flex items-center justify-center">
-    <div class="text-center">
-        <h1 class="text-6xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text mb-4">500</h1>
-        <p class="text-xl text-gray-400 mb-6">Internal Server Error</p>
-        <a href="/docs" class="bg-gradient-to-r from-purple-600 to-purple-400 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all hover:opacity-90 hover:shadow-lg">Back to Dashboard</a>
+<body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
+    <!-- Loader -->
+    <div id="loader">
+        <span class="loading-text">Loading</span>
     </div>
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-[#000000] z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
+        <div class="py-4 px-4 flex justify-between items-center border-b border-neutral-dark">
+            <h3 class="text-lg font-semibold text-white">Navigation</h3>
+            <button onclick="closeSidebar()" class="text-gray-400 hover:text-white lg:hidden" aria-label="Close Sidebar">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div id="sidebarContent" class="pt-4 px-4 space-y-3">
+            <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                </svg>
+                Documentation
+            </a>
+        </div>
+    </div>
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-[#000000] border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="text-base font-semibold text-white">Notifications</h4>
+            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium hover:text-premium-orange transition-colors">Mark all as read</button>
+        </div>
+        <div id="notifContent" class="space-y-4"></div>
+    </div>
+    <header class="sticky top-0 z-50 bg-[#000000] border-b border-neutral-dark py-4 shadow-md">
+        <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto flex items-center px-4 lg:px-0 relative">
+            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
+                <i class="fas fa-bars text-white text-xl"></i>
+            </button>
+            <h1 class="text-lg font-bold text-white absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0 lg:ml-0">Error Dashboard</h1>
+            <div class="flex-grow"></div>
+            <button onclick="toggleNotifications()" class="relative transition-all hover:scale-110 pr-2" aria-label="Notifications">
+                <i class="fas fa-bell text-white text-xl"></i>
+                <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
+            </button>
+        </div>
+    </header>
+    <main class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-6 py-8 lg:px-8">
+        <div class="text-center mb-8">
+            <h2 class="text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-premium">500</h2>
+            <p class="text-2xl font-semibold text-white mb-4">Internal Server Error</p>
+            <p class="text-base text-neutral-light mb-6">Something went wrong on our end.</p>
+        </div>
+        <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+            <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-3">Why This Error?</h3>
+            <p class="text-sm text-neutral-light mb-4">
+                A 500 error indicates an internal server issue. This could be caused by:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-sm text-neutral-light">
+                <li>Unexpected conditions preventing the server from fulfilling the request.</li>
+                <li>Server-side bugs, overload, or configuration problems.</li>
+                <li>Issues with database connections or third-party services.</li>
+                <li>Temporary maintenance or high traffic spikes.</li>
+            </ul>
+            <p class="text-sm text-neutral-light mt-4">
+                Please try refreshing the page or come back later. If the issue continues, contact our support team for assistance.
+            </p>
+        </div>
+        <div class="text-center">
+            <a href="/docs" class="inline-flex items-center bg-gradient-premium text-black px-6 py-3 rounded-full text-sm font-medium transition-all hover:shadow-premium">
+                Go to Documentation
+            </a>
+        </div>
+    </main>
+    <footer class="bg-[#000000] border-t border-neutral-dark py-6 relative z-10 w-full">
+        <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-semibold text-white mb-3">About</h3>
+                    <p class="text-sm text-neutral-light leading-relaxed">
+                        This is an error page for our API documentation platform.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-white mb-3">Connect</h3>
+                    <div class="flex gap-3">
+                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                            <i class="fab fa-telegram-plane text-lg"></i>
+                        </a>
+                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                            <i class="fab fa-facebook-messenger text-lg"></i>
+                        </a>
+                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                            <i class="fab fa-github text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-800 text-left">
+                <p class="text-sm text-gray-500" id="footerCopyright">© 2025 API Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const notifContent = document.getElementById('notifContent');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        const notifBadge = document.getElementById('notifBadge');
+        let notifs = [];
+        let readIds = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+        function relativeTime(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            if (diff < 60000) return 'Just Now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+            return new Date(timestamp).toLocaleDateString();
+        }
+        function toggleSidebar() {
+            if (window.matchMedia('(min-width: 1024px)').matches) return;
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                closeSidebar();
+            }
+        }
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        function toggleNotifications() {
+            if (notificationPanel.classList.contains('hidden')) {
+                notificationPanel.classList.remove('hidden');
+            } else {
+                notificationPanel.classList.add('hidden');
+            }
+        }
+        function markAsRead(id) {
+            if (!readIds.includes(id)) {
+                readIds.push(id);
+                localStorage.setItem('readNotifications', JSON.stringify(readIds));
+                updateNotifPanel();
+            }
+        }
+        function updateNotifPanel() {
+            const unread = notifs.filter(n => !readIds.includes(n.id));
+            let notifHtml = '';
+            if (unread.length > 0) {
+                notifHtml = unread.map(n => `
+                    <div onclick="markAsRead(${n.id})" class="notification-item py-3 cursor-pointer border-b border-neutral-dark last:border-0">
+                        <h5 class="text-sm font-semibold text-white mb-1">${n.title}</h5>
+                        <p class="text-xs text-neutral-light mb-1">${n.message}</p>
+                        <span class="text-xs text-gray-500">${relativeTime(n.createdAt)}</span>
+                    </div>
+                `).join('');
+                notifBadge.textContent = unread.length;
+                notifBadge.classList.remove('hidden');
+            } else {
+                notifHtml = '<p class="text-xs text-gray-400 text-center py-4">No notifications yet.</p>';
+                notifBadge.classList.add('hidden');
+            }
+            notifContent.innerHTML = notifHtml;
+        }
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
+                closeSidebar();
+                notificationPanel.classList.add('hidden');
+            }
+        });
+        clearNotificationsBtn.addEventListener('click', () => {
+            const newIds = notifs.map(n => n.id).filter(id => !readIds.includes(id));
+            if (newIds.length > 0) {
+                readIds = [...readIds, ...newIds];
+                localStorage.setItem('readNotifications', JSON.stringify(readIds));
+                updateNotifPanel();
+            }
+        });
+        window.addEventListener('load', async () => {
+            const loader = document.getElementById('loader');
+            const main = document.querySelector('main');
+            try {
+                // Optional: Fetch settings if needed, but hardcoded for error page
+                const setData = { name: 'API Platform', operator: 'AjiroDesu', telegram: '#', messenger: '#', github: '#' }; // Placeholder
+                document.getElementById('telegramLink').href = setData.telegram;
+                document.getElementById('messengerLink').href = setData.messenger;
+                document.getElementById('githubLink').href = setData.github;
+                document.getElementById('footerCopyright').textContent = `© ${new Date().getFullYear()} ${setData.name}. All rights reserved.`;
+
+                notifs = []; // No notifications for error page or fetch if needed
+                updateNotifPanel();
+                // Polling optional, but keep for consistency
+                setInterval(updateNotifPanel, 60000);
+                hljs.highlightAll();
+            } finally {
+                loader.classList.add('hidden');
+                main.classList.add('loaded');
+            }
+        });
+    </script>
 </body>
 </html>

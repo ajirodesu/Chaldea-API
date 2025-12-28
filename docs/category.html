@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -166,9 +171,13 @@
             opacity: 1;
             transform: translateY(0);
         }
+        pre code.hljs {
+            background: transparent !important;
+            padding: 0 !important;
+        }
     </style>
 </head>
-<body class="bg-[#000000] text-premium antialiased font-mono min-h-screen">
+<body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
     <!-- Loader -->
     <div id="loader">
         <span class="loading-text">Loading</span>
@@ -245,19 +254,19 @@
                 <div>
                     <h3 class="font-semibold text-white mb-3">Connect</h3>
                     <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-telegram-plane text-lg"></i>
                         </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-facebook-messenger text-lg"></i>
                         </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#000000] hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
+                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-github text-lg"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="pt-8 border-t border-neutral-dark">
+            <div class="pt-8 border-t border-gray-800 text-left">
                 <p class="text-sm text-gray-500" id="footerCopyright"></p>
             </div>
         </div>
@@ -472,6 +481,7 @@
             }
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
             curlContent.textContent = curl;
+            hljs.highlightElement(curlContent);
         }
         function switchMethod(endpointIndex, method) {
             const tabs = ['GET', 'POST']; // Assuming GET and POST
@@ -508,18 +518,12 @@
         function clearResponse(endpointIndex) {
             const responseElement = document.getElementById(`response-${endpointIndex}`);
             const responseContent = document.getElementById(`response-content-${endpointIndex}`);
-            const curlElement = document.getElementById(`curl-${endpointIndex}`);
-            const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
             const clearButton = document.getElementById(`clear-${endpointIndex}`);
             responseElement.classList.add('slide-up');
-            curlElement.classList.add('slide-up');
             setTimeout(() => {
                 responseElement.classList.add('hidden');
                 responseElement.classList.remove('slide-up', 'slide-down');
                 responseContent.innerHTML = '';
-                curlElement.classList.add('hidden');
-                curlElement.classList.remove('slide-up', 'slide-down');
-                curlContent.textContent = '';
                 clearButton.classList.add('hidden');
             }, 150);
         }
@@ -661,6 +665,7 @@
                 }
                 const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
                 curlContent.textContent = curlCommand;
+                hljs.highlightElement(curlContent);
                 curlElement.classList.remove('hidden');
                 curlElement.classList.add('slide-down');
                 responseContent.innerHTML = '<span class="text-white">Loading...</span>';
@@ -668,11 +673,26 @@
                 responseElement.classList.add('slide-down');
                 const response = await axios(axiosConfig);
                 const responseContentType = response.headers['content-type'] || '';
+                const methodColors = {
+                    'GET': 'text-green-400',
+                    'POST': 'text-blue-400',
+                    'PUT': 'text-orange-400',
+                    'DELETE': 'text-red-400',
+                    'HEAD': 'text-purple-400'
+                };
+                const methodClass = methodColors[method] || 'text-gray-400';
+                let statusClass = 'text-gray-400';
+                const statusCode = response.status;
+                if (statusCode >= 200 && statusCode < 300) statusClass = 'text-green-400';
+                else if (statusCode >= 300 && statusCode < 400) statusClass = 'text-blue-400';
+                else if (statusCode >= 400 && statusCode < 500) statusClass = 'text-yellow-400';
+                else if (statusCode >= 500) statusClass = 'text-red-400';
                 const headerHtml = `<div class="text-gray-400 text-xs mb-3">
-                    <pre>Method: ${method}</pre>
+                    <pre class="${methodClass}">Method: ${method}</pre>
                     <pre>URL: ${fullUrl}</pre>
-                    <pre>Status: ${response.status} ${response.statusText}</pre>
+                    <pre class="${statusClass}">Status: ${response.status} ${response.statusText}</pre>
                 </div>`;
+                let contentHtml = '';
                 if (responseContentType.includes('application/json')) {
                     const jsonString = JSON.stringify(response.data, null, 2);
                     const escapedJsonString = jsonString
@@ -681,7 +701,20 @@
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
-                    responseContent.innerHTML = headerHtml + `<pre class="text-white">${escapedJsonString}</pre>`;
+                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-json">${escapedJsonString}</code></pre>`;
+                    hljs.highlightAll();
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
+                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                } else if (responseContentType.includes('text/')) {
+                    const escapedText = response.data
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
+                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-plaintext">${escapedText}</code></pre>`;
+                    hljs.highlightAll();
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
@@ -689,7 +722,7 @@
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
                     const imageUrl = URL.createObjectURL(blobResponse.data);
-                    responseContent.innerHTML = headerHtml + `
+                    contentHtml = `
                         <img src="${imageUrl}" alt="Response Image" class="max-w-full h-auto rounded">
                     `;
                     copyResponseButton.classList.remove('hidden');
@@ -704,7 +737,7 @@
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
                     const audioUrl = URL.createObjectURL(blobResponse.data);
-                    responseContent.innerHTML = headerHtml + `
+                    contentHtml = `
                         <div class="text-white mb-3">Audio Player:</div>
                         <audio controls class="w-full mb-3">
                             <source src="${audioUrl}" type="${responseContentType}">
@@ -723,7 +756,7 @@
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
                     const videoUrl = URL.createObjectURL(blobResponse.data);
-                    responseContent.innerHTML = headerHtml + `
+                    contentHtml = `
                         <div class="text-white mb-3">Video Player:</div>
                         <video controls class="w-full max-h-64 mb-3 rounded">
                             <source src="${videoUrl}" type="${responseContentType}">
@@ -742,7 +775,7 @@
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
                     const pdfUrl = URL.createObjectURL(blobResponse.data);
-                    responseContent.innerHTML = headerHtml + `
+                    contentHtml = `
                         <div class="text-white mb-3">PDF Document:</div>
                         <iframe src="${pdfUrl}" class="w-full h-64 border border-gray-600 mb-3 rounded"></iframe>
                     `;
@@ -755,16 +788,38 @@
                     };
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
                 } else {
-                    responseContent.innerHTML = headerHtml + `<pre class="text-white whitespace-pre-wrap m-0">${response.data}</pre>`;
+                    const escapedText = response.data
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;');
+                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-plaintext">${escapedText}</code></pre>`;
+                    hljs.highlightAll();
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
                 }
+                responseContent.innerHTML = contentHtml;
             } catch (error) {
                 let errorMessage = error.message;
                 let statusInfo = 'Error';
+                const methodColors = {
+                    'GET': 'text-green-400',
+                    'POST': 'text-blue-400',
+                    'PUT': 'text-orange-400',
+                    'DELETE': 'text-red-400',
+                    'HEAD': 'text-purple-400'
+                };
+                const methodClass = methodColors[method] || 'text-gray-400';
+                let statusClass = 'text-red-400';
                 if (error.response) {
                     statusInfo = `${error.response.status} ${error.response.statusText}`;
+                    const statusCode = error.response.status;
+                    if (statusCode >= 200 && statusCode < 300) statusClass = 'text-green-400';
+                    else if (statusCode >= 300 && statusCode < 400) statusClass = 'text-blue-400';
+                    else if (statusCode >= 400 && statusCode < 500) statusClass = 'text-yellow-400';
+                    else if (statusCode >= 500) statusClass = 'text-red-400';
                     if (error.response.data && typeof error.response.data === 'object') {
                         errorMessage = JSON.stringify(error.response.data, null, 2);
                     } else {
@@ -773,14 +828,22 @@
                 } else if (error.request) {
                     errorMessage = 'Network Error: ' + error.message;
                 }
+                const escapedError = errorMessage
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
                 responseContent.innerHTML = `
                     <div class="text-gray-400 text-xs mb-3">
-                        <pre>Method: ${method}</pre>
+                        <pre class="${methodClass}">Method: ${method}</pre>
                         <pre>URL: ${fullUrl}</pre>
-                        <pre>Status: ${statusInfo}</pre>
+                        <pre class="${statusClass}">Status: ${statusInfo}</pre>
                     </div>
-                    <pre class="text-white">${errorMessage.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}</pre>
+                    <div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div>
+                    <pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-json">${escapedError}</code></pre>
                 `;
+                hljs.highlightAll();
                 responseElement.classList.remove('hidden');
                 responseElement.classList.add('slide-down');
                 copyResponseButton.classList.remove('hidden');
@@ -924,6 +987,15 @@
                     const bodyExample = item.params ? JSON.stringify(item.params.reduce((acc, p) => { if (!basePath.includes(`:${p.name}`)) acc[p.name] = p.example || ''; return acc; }, {}), null, 2) : '{}';
                     let getStyle = methods.length > 1 ? '' : (methods[0] === 'GET' ? 'display: block;' : 'display: none;');
                     let postStyle = methods.length > 1 ? 'display: none;' : (methods[0] === 'POST' ? 'display: block;' : 'display: none;');
+                    const paramsHtml = (item.params && item.params.length) ? `
+                        <h5 class="text-xs font-medium text-white mb-3 flex items-center">
+                            <span class="material-icons text-xs mr-1">tune</span>
+                            PARAMETERS
+                        </h5>
+                        <div class="space-y-3">
+                            ${formHtml}
+                        </div>
+                    ` : '';
                     const div = document.createElement('div');
                     div.classList.add('bg-[#000000]', 'border', 'border-neutral-dark', 'api-item', 'hover:border-premium-yellow', 'rounded-xl', 'overflow-hidden', 'shadow-md', 'transition-all', 'hover:shadow-premium');
                     div.dataset.method = methodStr;
@@ -963,25 +1035,30 @@
                                 <div>
                                     <form id="form-${index}" onsubmit="executeRequest(event, ${index}, '${methods[0]}', '${basePath}', 'application/json')">
                                         ${tabsHtml}
-                                        <div class="mb-4 space-y-3 method-content method-get-${index}" style="${getStyle}">
-                                            ${formHtml}
+                                        <div class="mb-4 method-content method-get-${index}" style="${getStyle}">
+                                            ${paramsHtml}
                                         </div>
                                         <div class="mb-4 method-content method-post-${index}" style="${postStyle}">
-                                            <textarea
-                                                name="body"
-                                                rows="8"
-                                                class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm focus:outline-none focus:border-premium-yellow text-white placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-premium resize-none"
-                                                placeholder="Enter JSON body here...">${bodyExample}</textarea>
-                                            <div class="text-xs text-gray-500 mt-2">
-                                                Modify the JSON structure above as needed for your request.
+                                            <div class="bg-[#000000] border border-neutral-dark text-white text-xs rounded-md">
+                                                <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
+                                                    <span class="text-xs text-gray-500">Request Body</span>
+                                                </div>
+                                                <div class="p-4">
+                                                    <textarea name="body" rows="8" class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm focus:outline-none focus:border-premium-yellow text-white placeholder:text-gray-500 font-mono rounded-lg transition-all focus:shadow-premium resize-none" placeholder="Enter JSON body here...">${bodyExample}</textarea>
+                                                    <div class="text-xs text-gray-500 mt-2">
+                                                        Modify the JSON structure above as needed for your request.
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <button type="submit" class="bg-gradient-premium hover:opacity-90 font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
-                                            Execute
-                                        </button>
-                                        <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden bg-[#000000] border border-neutral-dark hover:border-premium-yellow font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 ml-2 rounded-lg">
-                                            Clear
-                                        </button>
+                                        <div class="flex space-x-2 mt-4">
+                                            <button type="submit" class="flex-1 bg-gradient-premium hover:opacity-90 font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
+                                                Execute
+                                            </button>
+                                            <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden flex-1 bg-[#000000] border border-neutral-dark hover:border-premium-yellow font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 rounded-lg">
+                                                Clear
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -995,8 +1072,11 @@
                                         <span class="material-icons text-sm">content_copy</span>
                                     </button>
                                 </div>
-                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs p-4 rounded-lg">
-                                    <div class="bg-[#000000] max-h-80 overflow-auto" id="response-content-${index}"></div>
+                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs rounded-md">
+                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
+                                        <span class="text-xs text-gray-500">Output</span>
+                                    </div>
+                                    <div class="p-4 max-h-80 overflow-auto" id="response-content-${index}"></div>
                                 </div>
                             </div>
                             <div id="curl-${index}" class="mt-6">
@@ -1009,8 +1089,13 @@
                                         <span class="material-icons text-sm">content_copy</span>
                                     </button>
                                 </div>
-                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs p-4 rounded-lg">
-                                    <pre class="text-white whitespace-pre-wrap overflow-auto max-h-40" id="curl-content-${index}"></pre>
+                                <div class="bg-[#000000] border border-neutral-dark text-white text-xs rounded-md">
+                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
+                                        <span class="text-xs text-gray-500">Shell</span>
+                                    </div>
+                                    <div class="p-4">
+                                        <pre class="text-white text-xs m-0 whitespace-pre-wrap overflow-auto max-h-40"><code class="language-bash" id="curl-content-${index}"></code></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
