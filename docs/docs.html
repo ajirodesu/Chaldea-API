@@ -486,11 +486,11 @@
                 document.getElementById('totalEndpoints').textContent = endpointsData.count;
                 document.getElementById('totalCategories').textContent = endpoints.length;
                 let sidebarHtml = `
-                    <a href="/docs" class="sidebar-item flex items-center px-3 py-1 text-white transition-all ${location.pathname === '/docs' ? 'active' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
-                        <span class="label">Dashboard</span>
+                        Dashboard
                     </a>
                     <div class="border-t border-neutral-dark my-3 -mx-4"></div>
                     <p class="text-gray-400 text-sm mb-2 font-medium">Available Categories</p>
@@ -500,10 +500,10 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="sidebar-item flex items-center justify-between transition-all ${active ? 'active' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#000000]' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
-                                <span class="label">${capitalizedName} (${cat.items.length})</span>
+                                ${capitalizedName} (${cat.items.length})
                             </div>
                             <i class="material-icons text-lg text-gray-400">keyboard_arrow_right</i>
                         </a>

@@ -126,38 +126,6 @@
         .custom-dropdown button svg {
             transition: transform 0.2s ease;
         }
-        /* Sidebar item styles */
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.6rem;
-            transition: all 0.18s ease;
-        }
-        .sidebar-item .label {
-            color: #D1D5DB;
-        }
-        .sidebar-item.active {
-            background: linear-gradient(90deg, rgba(249,115,22,0.06), rgba(251,191,36,0.03));
-            box-shadow: 0 6px 20px rgba(249,115,22,0.04);
-            border-left: 4px solid #F97316;
-        }
-        .sidebar-item.active .label {
-            color: #FFFFFF;
-            font-weight: 600;
-        }
-        /* Method tab styles */
-        .method-tab {
-            padding: 0.35rem 0.9rem;
-            border-radius: 0.5rem;
-            transition: all 0.18s ease;
-        }
-        .method-tab.tab-active {
-            background: rgba(249,115,22,0.08);
-            color: #FFFFFF !important;
-            box-shadow: 0 6px 18px rgba(249,115,22,0.04);
-        }
         .custom-dropdown button.open svg {
             transform: rotate(180deg);
         }
@@ -525,13 +493,9 @@
                 }
             }
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
-            if (curlContent) {
-                curlContent.classList.remove('hljs');
-                curlContent.classList.add('language-bash');
-                curlContent.textContent = curl;
-                // Defer highlighting to ensure DOM updates are applied
-                setTimeout(() => { hljs.highlightElement(curlContent); curlContent.classList.add('hljs'); }, 0);
-            }
+            curlContent.classList.remove('hljs');
+            curlContent.textContent = curl;
+            hljs.highlightElement(curlContent);
         }
         function switchMethod(endpointIndex, method) {
             const possible = ['get','post','put','delete','head','patch'];
@@ -541,7 +505,6 @@
                 if (tab) {
                     if (m === method) {
                         tab.classList.add('text-white');
-                        tab.classList.add('tab-active');
                         tab.classList.remove('text-gray-500');
                         const indicator = document.getElementById(`tab-indicator-${endpointIndex}`);
                         if (indicator) {
@@ -550,7 +513,6 @@
                         }
                     } else {
                         tab.classList.remove('text-white');
-                        tab.classList.remove('tab-active');
                         tab.classList.add('text-gray-500');
                     }
                 }
@@ -570,8 +532,7 @@
             const curlEl = document.getElementById(`curl-content-${endpointIndex}`);
             if (curlEl) {
                 curlEl.classList.remove('hljs');
-                curlEl.classList.add('language-bash');
-                setTimeout(() => { hljs.highlightElement(curlEl); curlEl.classList.add('hljs'); }, 0);
+                hljs.highlightElement(curlEl);
             }
         }
         function clearResponse(endpointIndex) {
@@ -950,7 +911,7 @@
                                     type="button"
                                     onclick="switchMethod(${index}, '${m}')"
                                     id="tab-${m.toLowerCase()}-${index}"
-                                    class="method-tab px-4 py-2 text-xs font-semibold ${idx === 0 ? 'text-white tab-active' : 'text-gray-500 hover:text-white'} transition-colors"
+                                    class="px-4 py-2 text-xs font-semibold ${idx === 0 ? 'text-white' : 'text-gray-500 hover:text-white'} transition-colors"
                                 >
                                     ${m}
                                 </button>
@@ -1141,17 +1102,16 @@
                     const curlEl = document.getElementById(`curl-content-${index}`);
                     if (curlEl) {
                         curlEl.classList.remove('hljs');
-                        curlEl.classList.add('language-bash');
-                        setTimeout(() => { hljs.highlightElement(curlEl); curlEl.classList.add('hljs'); }, 0);
+                        hljs.highlightElement(curlEl);
                     }
                     index++;
                 }
                 let sidebarHtml = `
-                    <a href="/docs" class="sidebar-item flex items-center px-3 py-1 text-white transition-all ${location.pathname === '/docs' ? 'active' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
-                        <span class="label">Dashboard</span>
+                        Dashboard
                     </a>
                     <div class="border-t border-neutral-dark my-3 -mx-4"></div>
                     <p class="text-gray-400 text-sm mb-2 font-medium">Available Categories</p>
@@ -1161,10 +1121,10 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="sidebar-item flex items-center justify-between transition-all ${active ? 'active' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#000000]' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
-                                <span class="label">${capitalizedName} (${cat.items.length})</span>
+                                ${capitalizedName} (${cat.items.length})
                             </div>
                             <i class="material-icons text-lg text-gray-400">keyboard_arrow_right</i>
                         </a>
