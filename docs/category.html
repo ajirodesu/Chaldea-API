@@ -1138,7 +1138,7 @@
                     index++;
                 }
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' || location.pathname === '/' ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -1150,9 +1150,9 @@
                 for (const cat of endpoints) {
                     const capitalizedName = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
-                    const active = location.pathname === `/category/${slug}`;
+                    const active = location.pathname.startsWith(`/category/${slug}`);
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
