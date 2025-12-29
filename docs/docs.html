@@ -486,7 +486,7 @@
                 document.getElementById('totalEndpoints').textContent = endpointsData.count;
                 document.getElementById('totalCategories').textContent = endpoints.length;
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' || location.pathname === '/' ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -498,9 +498,9 @@
                 for (const cat of endpoints) {
                     const capitalizedName = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
-                    const active = location.pathname.startsWith(`/category/${slug}`);
+                    const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
@@ -540,28 +540,14 @@
                 let curlBody = '';
                 let jsBody = '';
                 if (randomItem.params && randomItem.params.length > 0) {
-                    paramsHtml = `
-                        <table class="w-full text-sm text-gray-400">
-                            <thead>
-                                <tr class="border-b border-neutral-dark text-left text-gray-300">
-                                    <th class="py-2 pr-4 font-medium">Name</th>
-                                    <th class="py-2 pr-4 font-medium">Type</th>
-                                    <th class="py-2 pr-4 font-medium">Description</th>
-                                    <th class="py-2 font-medium">Example</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${randomItem.params.map(p => `
-                                    <tr class="border-b border-neutral-dark last:border-0">
-                                        <td class="py-2 pr-4 font-mono text-gray-200">${p.name}</td>
-                                        <td class="py-2 pr-4">string</td>
-                                        <td class="py-2 pr-4 break-words">${p.desc}</td>
-                                        <td class="py-2 break-all">${p.example ? `<code class="bg-[#000000] px-1 py-0.5 rounded text-gray-300">${p.example}</code>` : ''}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
+                    paramsHtml = randomItem.params.map(p => `
+                        <div class="text-sm space-y-1">
+                            <span class="font-mono font-medium text-gray-200 block">${p.name}</span>
+                            <span class="text-gray-400 text-xs block">Type: string</span>
+                            <p class="text-gray-400 text-xs break-words">${p.desc}</p>
+                            ${p.example ? `<span class="text-gray-500 text-xs block">Example:</span><code class="bg-[#000000] px-1 py-0.5 rounded break-all max-w-full text-xs text-gray-300">${p.example}</code>` : ''}
+                        </div>
+                    `).join('');
                     const exampleParams = {};
                     randomItem.params.forEach(p => {
                         if (p.example) exampleParams[p.name] = p.example;
@@ -639,7 +625,7 @@ fetch('${window.location.origin}${basePath}', {
                             <p class="text-xs text-gray-400 mb-3">
                                 Parameters for the request.
                             </p>
-                            <div class="bg-[#000000] border border-neutral-dark p-4 rounded-md overflow-x-auto">
+                            <div class="bg-[#000000] border border-neutral-dark p-4 space-y-4 rounded-md overflow-hidden">
                                 ${paramsHtml}
                             </div>
                         </div>
