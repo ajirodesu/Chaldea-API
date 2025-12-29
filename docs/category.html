@@ -493,9 +493,18 @@
                 }
             }
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+            if (!curlContent) return;
             curlContent.classList.remove('hljs');
+            // set text then explicitly run highlight.js for bash
             curlContent.textContent = curl;
-            hljs.highlightElement(curlContent);
+            try {
+                const result = hljs.highlight(curl, { language: 'bash' });
+                curlContent.innerHTML = result.value;
+                curlContent.classList.add('hljs');
+            } catch (e) {
+                // fallback
+                hljs.highlightElement(curlContent);
+            }
         }
         function switchMethod(endpointIndex, method) {
             const possible = ['get','post','put','delete','head','patch'];
@@ -532,7 +541,15 @@
             const curlEl = document.getElementById(`curl-content-${endpointIndex}`);
             if (curlEl) {
                 curlEl.classList.remove('hljs');
-                hljs.highlightElement(curlEl);
+                // try to explicitly highlight current text with bash grammar
+                try {
+                    const currentText = curlEl.textContent || curlEl.innerText || '';
+                    const result = hljs.highlight(currentText, { language: 'bash' });
+                    curlEl.innerHTML = result.value;
+                    curlEl.classList.add('hljs');
+                } catch (e) {
+                    hljs.highlightElement(curlEl);
+                }
             }
         }
         function clearResponse(endpointIndex) {
@@ -684,9 +701,17 @@
                     }
                 }
                 const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
-                curlContent.classList.remove('hljs');
-                curlContent.textContent = curlCommand;
-                hljs.highlightElement(curlContent);
+                if (curlContent) {
+                    curlContent.classList.remove('hljs');
+                    curlContent.textContent = curlCommand;
+                    try {
+                        const result = hljs.highlight(curlCommand, { language: 'bash' });
+                        curlContent.innerHTML = result.value;
+                        curlContent.classList.add('hljs');
+                    } catch (e) {
+                        hljs.highlightElement(curlContent);
+                    }
+                }
                 curlElement.classList.remove('hidden');
                 curlElement.classList.add('slide-down');
                 responseContent.innerHTML = '<span class="text-white">Loading...</span>';
@@ -1102,7 +1127,13 @@
                     const curlEl = document.getElementById(`curl-content-${index}`);
                     if (curlEl) {
                         curlEl.classList.remove('hljs');
-                        hljs.highlightElement(curlEl);
+                        try {
+                            const result = hljs.highlight(curlEl.textContent || curlEl.innerText || '', { language: 'bash' });
+                            curlEl.innerHTML = result.value;
+                            curlEl.classList.add('hljs');
+                        } catch (e) {
+                            hljs.highlightElement(curlEl);
+                        }
                     }
                     index++;
                 }
@@ -1121,7 +1152,7 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#000000]' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
