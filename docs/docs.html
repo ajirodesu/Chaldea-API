@@ -540,16 +540,28 @@
                 let curlBody = '';
                 let jsBody = '';
                 if (randomItem.params && randomItem.params.length > 0) {
-                    paramsHtml = randomItem.params.map(p => `
-                        <div class="text-sm">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-mono font-medium text-gray-200">${p.name}</span>
-                                <span class="inline-block px-2 py-0.5 bg-[#000000] text-gray-400 border border-neutral-dark text-xs rounded-md">string</span>
-                            </div>
-                            <p class="text-gray-400 text-xs">${p.desc}</p>
-                            ${p.example ? `<div class="text-xs text-gray-500 mt-1">Example: <code class="bg-[#000000] px-1">${p.example}</code></div>` : ''}
-                        </div>
-                    `).join('');
+                    paramsHtml = `
+                        <table class="w-full text-sm text-gray-400">
+                            <thead>
+                                <tr class="border-b border-neutral-dark text-left text-gray-300">
+                                    <th class="py-2 pr-4 font-medium">Name</th>
+                                    <th class="py-2 pr-4 font-medium">Type</th>
+                                    <th class="py-2 pr-4 font-medium">Description</th>
+                                    <th class="py-2 font-medium">Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${randomItem.params.map(p => `
+                                    <tr class="border-b border-neutral-dark last:border-0">
+                                        <td class="py-2 pr-4 font-mono text-gray-200">${p.name}</td>
+                                        <td class="py-2 pr-4">string</td>
+                                        <td class="py-2 pr-4 break-words">${p.desc}</td>
+                                        <td class="py-2 break-all">${p.example ? `<code class="bg-[#000000] px-1 py-0.5 rounded text-gray-300">${p.example}</code>` : ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
                     const exampleParams = {};
                     randomItem.params.forEach(p => {
                         if (p.example) exampleParams[p.name] = p.example;
@@ -627,7 +639,7 @@ fetch('${window.location.origin}${basePath}', {
                             <p class="text-xs text-gray-400 mb-3">
                                 Parameters for the request.
                             </p>
-                            <div class="bg-[#000000] border border-neutral-dark p-4 space-y-3 rounded-md">
+                            <div class="bg-[#000000] border border-neutral-dark p-4 rounded-md overflow-x-auto">
                                 ${paramsHtml}
                             </div>
                         </div>
