@@ -392,6 +392,19 @@
                 indicator.style.width = getTab.offsetWidth + 'px';
             }
         }
+        // Return the currently active method name (GET, POST, etc.) for an endpoint
+        function getActiveMethod(endpointIndex) {
+            const possible = ['get','post','put','delete','head','patch'];
+            for (const m of possible) {
+                const tab = document.getElementById(`tab-${m}-${endpointIndex}`);
+                if (tab && tab.classList.contains('text-white')) {
+                    return m.toUpperCase();
+                }
+            }
+            // fallback to first available tab
+            const firstTab = document.querySelector(`#tab-get-${endpointIndex}`) || document.querySelector(`#tab-post-${endpointIndex}`);
+            return firstTab ? (firstTab.textContent || 'GET').trim().toUpperCase() : 'GET';
+        }
         function toggleDropdown(dropdownId) {
             document.querySelectorAll('.custom-dropdown').forEach(dd => {
                 if (dd.id !== dropdownId) {
@@ -480,11 +493,13 @@
                 }
             }
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+            curlContent.classList.remove('hljs');
             curlContent.textContent = curl;
             hljs.highlightElement(curlContent);
         }
         function switchMethod(endpointIndex, method) {
-            const tabs = ['GET', 'POST']; // Assuming GET and POST
+            const possible = ['get','post','put','delete','head','patch'];
+            const tabs = possible.filter(m => document.getElementById(`tab-${m}-${endpointIndex}`)).map(m => m.toUpperCase());
             tabs.forEach(m => {
                 const tab = document.getElementById(`tab-${m.toLowerCase()}-${endpointIndex}`);
                 if (tab) {
@@ -502,11 +517,11 @@
                     }
                 }
             });
-            tabs.forEach(m => {
-                const contents = document.querySelectorAll(`.method-${m.toLowerCase()}-${endpointIndex}`);
+            possible.forEach(pm => {
+                const contents = document.querySelectorAll(`.method-${pm}-${endpointIndex}`);
                 contents.forEach(el => {
-                    el.style.display = m === method ? 'block' : 'none';
-                    el.querySelectorAll('input, textarea, select').forEach(inp => inp.disabled = m !== method);
+                    el.style.display = pm.toUpperCase() === method ? 'block' : 'none';
+                    el.querySelectorAll('input, textarea, select').forEach(inp => inp.disabled = pm.toUpperCase() !== method);
                 });
             });
             const form = document.getElementById(`form-${endpointIndex}`);
@@ -514,6 +529,11 @@
             onsubmit = onsubmit.replace(/executeRequest\(event, \d+, '[A-Z]+'/, `executeRequest(event, ${endpointIndex}, '${method}'`);
             form.setAttribute('onsubmit', onsubmit);
             generateExampleCurl(endpointIndex, method);
+            const curlEl = document.getElementById(`curl-content-${endpointIndex}`);
+            if (curlEl) {
+                curlEl.classList.remove('hljs');
+                hljs.highlightElement(curlEl);
+            }
         }
         function clearResponse(endpointIndex) {
             const responseElement = document.getElementById(`response-${endpointIndex}`);
@@ -664,6 +684,7 @@
                     }
                 }
                 const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
+                curlContent.classList.remove('hljs');
                 curlContent.textContent = curlCommand;
                 hljs.highlightElement(curlContent);
                 curlElement.classList.remove('hidden');
@@ -673,27 +694,10 @@
                 responseElement.classList.add('slide-down');
                 const response = await axios(axiosConfig);
                 const responseContentType = response.headers['content-type'] || '';
-                const methodColors = {
-                    'GET': 'text-green-400',
-                    'POST': 'text-blue-400',
-                    'PUT': 'text-orange-400',
-                    'DELETE': 'text-red-400',
-                    'HEAD': 'text-purple-400'
-                };
-                const methodClass = methodColors[method] || 'text-gray-400';
-                let statusClass = 'text-gray-400';
-                const statusCode = response.status;
-                if (statusCode >= 200 && statusCode < 300) statusClass = 'text-green-400';
-                else if (statusCode >= 300 && statusCode < 400) statusClass = 'text-blue-400';
-                else if (statusCode >= 400 && statusCode < 500) statusClass = 'text-yellow-400';
-                else if (statusCode >= 500) statusClass = 'text-red-400';
-                const headerHtml = `<div class="text-gray-400 text-xs mb-3">
-                    <pre class="${methodClass}">Method: ${method}</pre>
-                    <pre>URL: ${fullUrl}</pre>
-                    <pre class="${statusClass}">Status: ${response.status} ${response.statusText}</pre>
-                </div>`;
                 let contentHtml = '';
+                let lang = 'plaintext';
                 if (responseContentType.includes('application/json')) {
+                    lang = 'json';
                     const jsonString = JSON.stringify(response.data, null, 2);
                     const escapedJsonString = jsonString
                         .replace(/&/g, '&amp;')
@@ -701,8 +705,7 @@
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
-                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-json">${escapedJsonString}</code></pre>`;
-                    hljs.highlightAll();
+                    contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedJsonString}</code></pre>`;
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
@@ -713,8 +716,7 @@
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
-                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-plaintext">${escapedText}</code></pre>`;
-                    hljs.highlightAll();
+                    contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedText}</code></pre>`;
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
@@ -794,32 +796,20 @@
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
-                    contentHtml = headerHtml + `<div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div><pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-plaintext">${escapedText}</code></pre>`;
-                    hljs.highlightAll();
+                    contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedText}</code></pre>`;
                     copyResponseButton.classList.remove('hidden');
                     copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
                     copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
                 }
                 responseContent.innerHTML = contentHtml;
+                const responseCode = responseContent.querySelector('pre.text-white code');
+                if (responseCode) {
+                    responseCode.classList.remove('hljs');
+                    hljs.highlightElement(responseCode);
+                }
             } catch (error) {
                 let errorMessage = error.message;
-                let statusInfo = 'Error';
-                const methodColors = {
-                    'GET': 'text-green-400',
-                    'POST': 'text-blue-400',
-                    'PUT': 'text-orange-400',
-                    'DELETE': 'text-red-400',
-                    'HEAD': 'text-purple-400'
-                };
-                const methodClass = methodColors[method] || 'text-gray-400';
-                let statusClass = 'text-red-400';
                 if (error.response) {
-                    statusInfo = `${error.response.status} ${error.response.statusText}`;
-                    const statusCode = error.response.status;
-                    if (statusCode >= 200 && statusCode < 300) statusClass = 'text-green-400';
-                    else if (statusCode >= 300 && statusCode < 400) statusClass = 'text-blue-400';
-                    else if (statusCode >= 400 && statusCode < 500) statusClass = 'text-yellow-400';
-                    else if (statusCode >= 500) statusClass = 'text-red-400';
                     if (error.response.data && typeof error.response.data === 'object') {
                         errorMessage = JSON.stringify(error.response.data, null, 2);
                     } else {
@@ -835,15 +825,13 @@
                     .replace(/"/g, '&quot;')
                     .replace(/'/g, '&#39;');
                 responseContent.innerHTML = `
-                    <div class="text-gray-400 text-xs mb-3">
-                        <pre class="${methodClass}">Method: ${method}</pre>
-                        <pre>URL: ${fullUrl}</pre>
-                        <pre class="${statusClass}">Status: ${statusInfo}</pre>
-                    </div>
-                    <div class="text-gray-400 text-xs mb-3"><pre>Response Body:</pre></div>
                     <pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-json">${escapedError}</code></pre>
                 `;
-                hljs.highlightAll();
+                const responseCode = responseContent.querySelector('pre.text-white code');
+                if (responseCode) {
+                    responseCode.classList.remove('hljs');
+                    hljs.highlightElement(responseCode);
+                }
                 responseElement.classList.remove('hidden');
                 responseElement.classList.add('slide-down');
                 copyResponseButton.classList.remove('hidden');
@@ -985,8 +973,8 @@
                         }).join('');
                     }
                     const bodyExample = item.params ? JSON.stringify(item.params.reduce((acc, p) => { if (!basePath.includes(`:${p.name}`)) acc[p.name] = p.example || ''; return acc; }, {}), null, 2) : '{}';
-                    let getStyle = methods.length > 1 ? '' : (methods[0] === 'GET' ? 'display: block;' : 'display: none;');
-                    let postStyle = methods.length > 1 ? 'display: none;' : (methods[0] === 'POST' ? 'display: block;' : 'display: none;');
+                    let getStyle = methods.length > 1 ? (methods[0] === 'GET' ? 'display: block;' : 'display: none;') : (methods[0] === 'GET' ? 'display: block;' : 'display: none;');
+                    let postStyle = methods.length > 1 ? (methods[0] === 'POST' ? 'display: block;' : 'display: none;') : (methods[0] === 'POST' ? 'display: block;' : 'display: none;');
                     const paramsHtml = (item.params && item.params.length) ? `
                         <h5 class="text-xs font-medium text-white mb-3 flex items-center">
                             <span class="material-icons text-xs mr-1">tune</span>
@@ -1101,7 +1089,21 @@
                         </div>
                     `;
                     apiList.appendChild(div);
+                    // Initialize curl preview and attach live update handlers
                     generateExampleCurl(index, methods[0]);
+                    const formEl = document.getElementById(`form-${index}`);
+                    const attachUpdate = () => generateExampleCurl(index, getActiveMethod(index));
+                    if (formEl) {
+                        formEl.querySelectorAll('input, textarea, select').forEach(inp => {
+                            inp.addEventListener('input', attachUpdate);
+                            inp.addEventListener('change', attachUpdate);
+                        });
+                    }
+                    const curlEl = document.getElementById(`curl-content-${index}`);
+                    if (curlEl) {
+                        curlEl.classList.remove('hljs');
+                        hljs.highlightElement(curlEl);
+                    }
                     index++;
                 }
                 let sidebarHtml = `
