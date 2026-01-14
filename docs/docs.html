@@ -1,3 +1,4 @@
+<!-- docs.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,9 +124,6 @@
         .bg-gradient-premium {
             background: linear-gradient(to right, #FBBF24, #F97316);
         }
-        .hover\:shadow-premium:hover {
-            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
-        }
         .text-premium {
             color: #D1D5DB;
         }
@@ -149,14 +147,6 @@
             background: transparent !important;
             padding: 0 !important;
         }
-
-        /* ===============================
-           New overrides & shell wrapping
-           =============================== */
-
-        /* Disable hover visual changes globally for elements using "hover:" utility classes.
-           This neutralizes color/background/transform/box-shadow changes caused by tailwind hover utilities.
-           It's intentionally broad so you don't need to remove hover: classes from the markup. */
         [class*="hover:"]:hover {
             transform: none !important;
             box-shadow: none !important;
@@ -168,8 +158,6 @@
             filter: none !important;
             transition: none !important;
         }
-
-        /* Target any element that includes Tailwind's hover:scale utility or hover: classes applied indirectly */
         .hover\\:scale-110:hover,
         .hover\\:text-white:hover,
         .hover\\:bg-\\[\\#000000\\]:hover,
@@ -179,23 +167,15 @@
             background-color: transparent !important;
             box-shadow: none !important;
         }
-
-        /* Make highlighted code and pre tags wrap long lines and avoid horizontal scroll */
-        /* This ensures long curl commands will flow to the next line instead of creating a horizontal scrollbar */
         pre,
         pre code,
         code.hljs,
         pre code.hljs {
-            white-space: pre-wrap !important; /* preserve newlines but allow wrapping */
-            white-space: -moz-pre-wrap !important;
-            white-space: -pre-wrap !important;
-            white-space: -o-pre-wrap !important;
+            white-space: pre-wrap !important;
             word-break: break-word !important;
             overflow-wrap: anywhere !important;
             overflow-x: hidden !important;
         }
-
-        /* Specific class for the shell block to ensure no horizontal scroll */
         .no-scroll-pre {
             max-width: 100%;
             overflow-x: hidden !important;
@@ -203,22 +183,16 @@
             white-space: pre-wrap !important;
             overflow-wrap: anywhere !important;
         }
-
-        /* If the code block is long vertically, allow it to scroll vertically but not horizontally (optional) */
         .no-scroll-pre-container {
-            max-height: 420px; /* tweak as needed */
+            max-height: 420px;
             overflow-y: auto;
             overflow-x: hidden;
         }
-
-        /* Improve readability: slightly larger line-height for wrapped commands */
         .no-scroll-pre code,
         .no-scroll-pre {
             line-height: 1.35;
             font-family: 'Ubuntu Mono', monospace;
         }
-
-        /* Copy button small adjustments */
         .copy-curl-btn {
             background: transparent;
             border: 1px solid transparent;
@@ -236,18 +210,27 @@
         .copy-curl-btn i {
             font-size: 14px;
         }
-        .copy-curl-btn:hover i {
-            transform: none;
+        .circle-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: linear-gradient(to right, #FBBF24, #F97316);
+            color: #000000;
+            font-size: 0.65rem;
+            font-weight: 600;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.2);
+            margin-left: 0.5rem;
         }
-
     </style>
 </head>
 <body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
-    <!-- Loader -->
     <div id="loader">
         <span class="loading-text">Loading</span>
     </div>
-    <!-- Sidebar -->
     <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-[#000000] z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
         <div class="py-4 px-4 flex justify-between items-center border-b border-neutral-dark">
             <h3 class="text-lg font-semibold text-white">API Categories</h3>
@@ -257,9 +240,7 @@
         </div>
         <div id="sidebarContent" class="pt-4 px-4 space-y-3"></div>
     </div>
-    <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
-    <!-- Notification Panel -->
     <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-[#000000] border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-base font-semibold text-white">Notifications</h4>
@@ -290,7 +271,6 @@
                 <span id="apiStatus"></span>
             </div>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="bg-[#000000] rounded-lg p-6 border border-neutral-dark shadow-xl transition-all">
                 <div class="flex justify-between items-start mb-2">
@@ -313,9 +293,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Removed API info / Base URL card as requested -->
-
         <div id="exampleEndpoint" class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all">
             <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-2">
                 Example Endpoint
@@ -325,7 +302,6 @@
             </p>
             <div id="exampleContent"></div>
         </div>
-
         <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all">
             <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-3 flex items-center">
                 Response Format
@@ -350,10 +326,7 @@
                 The additional fields depend on the endpoint.
             </p>
         </div>
-
-        <!-- Error Codes and footer were previously removed -->
     </main>
-
     <script>
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -495,7 +468,7 @@
                 document.getElementById('totalCategories').textContent = endpoints.length;
 
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white rounded-xl ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white rounded-xl bg-[#0b0b0b] border-l-4 border-[#eab308] pl-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -507,12 +480,11 @@
                 for (const cat of endpoints) {
                     const capitalizedName = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
-                    const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white rounded-xl ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white rounded-xl">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
-                                ${capitalizedName} (${cat.items.length})
+                                ${capitalizedName}<span class="circle-count">${cat.items.length}</span>
                             </div>
                             <i class="material-icons text-lg text-gray-400">keyboard_arrow_right</i>
                         </a>
@@ -520,7 +492,6 @@
                 }
                 sidebarContent.innerHTML = sidebarHtml;
 
-                // Start polling for notifications
                 setInterval(async () => {
                     try {
                         const res = await fetch('/notifications');
@@ -531,10 +502,8 @@
                         console.error('Failed to fetch notifications:', err);
                     }
                 }, 5000);
-                // Update times every minute
                 setInterval(updateNotifPanel, 60000);
 
-                // Build random example endpoint
                 const allItems = endpoints.flatMap(c => c.items);
                 const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
                 const exampleContent = document.getElementById('exampleContent');
@@ -543,8 +512,6 @@
                 const methods = randomItem.methods;
                 const methodStr = methods.join('/') || 'GET/POST';
                 const primaryMethod = methods.includes('POST') ? 'POST' : 'GET';
-
-                // Build cURL example (parameters are NOT injected into the cURL/Request area)
                 let curlExample = `curl -X ${primaryMethod} "${window.location.origin}${basePath}"`;
                 let curlBody = '';
                 if (randomItem.params && randomItem.params.length > 0) {
@@ -553,13 +520,10 @@
                         if (p.example) exampleParams[p.name] = p.example;
                     });
                     if (Object.keys(exampleParams).length > 0) {
-                        // keep example body generation for curl preview but DO NOT render parameter cards here
                         curlBody = ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(exampleParams)}'`;
                     }
                 }
                 curlExample += curlBody;
-
-                // Build Parameters content: each parameter gets its own card/box and will ONLY be placed in Parameters tab
                 let paramsContentHtml = '';
                 const hasParams = Boolean(randomItem.params && randomItem.params.length > 0);
                 if (hasParams) {
@@ -583,7 +547,6 @@
                             </div>
                         `;
                     }).join('');
-                    // Parameters content will be placed only inside the Parameters tab
                     paramsContentHtml = `
                         <div id="params-example" class="endpoint-content mb-3 text-xs hidden">
                             <div class="mb-3">
@@ -593,11 +556,7 @@
                             </div>
                         </div>
                     `;
-                } else {
-                    paramsContentHtml = ''; // show nothing if no params
                 }
-
-                // Tabs: conditional — when params exist show cURL + Parameters; otherwise show single "Request" tab
                 let tabsHtml = '';
                 if (hasParams) {
                     tabsHtml = `
@@ -614,7 +573,6 @@
                         </div>
                     `;
                 } else {
-                    // single "Request" tab which maps to curl-example content
                     tabsHtml = `
                         <div class="relative border-b border-neutral-dark mb-3">
                             <div class="flex relative">
@@ -626,9 +584,6 @@
                         </div>
                     `;
                 }
-
-                // cURL content: parameters are NOT shown here. If no params, add the note under the shell box.
-                // NOTE: pre uses "no-scroll-pre" + container to allow wrapping and prevent horizontal scrolling
                 let curlContentHtml = `
                     <div id="curl-example" class="endpoint-content mb-3 text-xs">
                         <div class="bg-[#000000] text-white font-mono text-xs border border-neutral-dark rounded-md relative">
@@ -646,8 +601,6 @@
                         ${!hasParams ? `<p class="text-xs text-gray-400 mt-2">cURL command to test the endpoint.</p>` : ''}
                     </div>
                 `;
-
-                // Assemble exampleContent: place tabs, curl content, and the parameters tab content (only the params tab holds parameter cards)
                 exampleContent.innerHTML = `
                     <div class="mb-4">
                         <h4 class="text-base font-medium text-white mb-2">
@@ -672,8 +625,6 @@
                         ${paramsContentHtml}
                     </div>
                 `;
-
-                // Initialize tabs (works with single or multiple tabs)
                 const firstTab = document.querySelector('.endpoint-tab');
                 const indicatorEl = document.getElementById('doc-tab-indicator');
                 if (firstTab && indicatorEl) {
@@ -682,7 +633,6 @@
                         indicatorEl.style.width = firstTab.offsetWidth + 'px';
                     });
                 }
-
                 const endpointTabs = document.querySelectorAll('.endpoint-tab');
                 endpointTabs.forEach(tab => {
                     tab.addEventListener('click', function() {
@@ -699,56 +649,37 @@
                             indicator.style.left = this.offsetLeft + 'px';
                             indicator.style.width = this.offsetWidth + 'px';
                         }
-                        // hide all endpoint-content blocks within this example container
                         const contents = this.closest('.mb-4').querySelectorAll('.endpoint-content');
                         contents.forEach(content => {
                             content.classList.add('hidden');
                         });
-                        // show the selected tab content; if params tab selected, it contains the parameter cards
                         const targetEl = document.getElementById(targetId);
                         if (targetEl) targetEl.classList.remove('hidden');
                         hljs.highlightAll();
                     });
                 });
-
-                // Ensure initial visibility:
-                // - Show curl-example by default
                 const defaultCurl = document.getElementById('curl-example');
                 if (defaultCurl) defaultCurl.classList.remove('hidden');
-                // - If params tab exists, it's hidden by default (cards only appear in Parameters tab)
-                // Highlight initial code blocks
                 hljs.highlightAll();
-
-                // Make operator dynamic in response format
                 const responseFormatCode = document.getElementById('responseFormatCode');
                 if (responseFormatCode) {
                     responseFormatCode.innerHTML = responseFormatCode.innerHTML.replace('"AjiroDesu"', `"${setData.operator}"`);
                 }
-
-                // ---------- Copy button handler for cURL (delegated) ----------
                 document.addEventListener('click', async (ev) => {
                     const btn = ev.target.closest('.copy-curl-btn');
                     if (!btn) return;
-
-                    // Find nearest code block inside the same container
                     const container = btn.closest('.no-scroll-pre-container') || btn.closest('.endpoint-content') || btn.closest('.bg-[#000000]') || document;
                     const codeEl = container.querySelector('pre.no-scroll-pre, code.language-bash, pre code') || null;
                     const text = codeEl ? (codeEl.innerText || codeEl.textContent || '') : '';
-
                     if (!text) return;
-
-                    // Visual feedback - change icon to check then revert
                     const icon = btn.querySelector('i');
                     const originalClass = icon ? icon.className : null;
-
-                    // Try navigator.clipboard first, fallback to textarea + execCommand
                     try {
                         if (navigator.clipboard && navigator.clipboard.writeText) {
                             await navigator.clipboard.writeText(text);
                         } else {
                             const ta = document.createElement('textarea');
                             ta.value = text;
-                            // Prevent scrolling to bottom
                             ta.style.position = 'fixed';
                             ta.style.top = '-9999px';
                             document.body.appendChild(ta);
@@ -757,16 +688,12 @@
                             document.execCommand('copy');
                             document.body.removeChild(ta);
                         }
-
                         if (icon) {
                             icon.className = 'fa-solid fa-check text-green-400';
                         }
                         btn.setAttribute('disabled', 'disabled');
-
-                        // small accessible tooltip via title attr
                         const originalTitle = btn.getAttribute('title') || '';
                         btn.setAttribute('title', 'Copied');
-
                         setTimeout(() => {
                             if (icon && originalClass) icon.className = originalClass;
                             btn.removeAttribute('disabled');
@@ -780,7 +707,6 @@
                         console.error('Copy failed', err);
                     }
                 });
-
             } finally {
                 loader.classList.add('hidden');
                 main.classList.add('loaded');
