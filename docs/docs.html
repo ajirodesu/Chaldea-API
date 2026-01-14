@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="">
     <meta name="theme-color" content="#000000">
     <meta name="robots" content="index, follow">
@@ -149,6 +149,97 @@
             background: transparent !important;
             padding: 0 !important;
         }
+
+        /* ===============================
+           New overrides & shell wrapping
+           =============================== */
+
+        /* Disable hover visual changes globally for elements using "hover:" utility classes.
+           This neutralizes color/background/transform/box-shadow changes caused by tailwind hover utilities.
+           It's intentionally broad so you don't need to remove hover: classes from the markup. */
+        [class*="hover:"]:hover {
+            transform: none !important;
+            box-shadow: none !important;
+            color: inherit !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            text-decoration: none !important;
+            opacity: 1 !important;
+            filter: none !important;
+            transition: none !important;
+        }
+
+        /* Target any element that includes Tailwind's hover:scale utility or hover: classes applied indirectly */
+        .hover\\:scale-110:hover,
+        .hover\\:text-white:hover,
+        .hover\\:bg-\\[\\#000000\\]:hover,
+        .hover\\:shadow-sm:hover {
+            transform: none !important;
+            color: inherit !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* Make highlighted code and pre tags wrap long lines and avoid horizontal scroll */
+        /* This ensures long curl commands will flow to the next line instead of creating a horizontal scrollbar */
+        pre,
+        pre code,
+        code.hljs,
+        pre code.hljs {
+            white-space: pre-wrap !important; /* preserve newlines but allow wrapping */
+            white-space: -moz-pre-wrap !important;
+            white-space: -pre-wrap !important;
+            white-space: -o-pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: anywhere !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Specific class for the shell block to ensure no horizontal scroll */
+        .no-scroll-pre {
+            max-width: 100%;
+            overflow-x: hidden !important;
+            word-break: break-word !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        /* If the code block is long vertically, allow it to scroll vertically but not horizontally (optional) */
+        .no-scroll-pre-container {
+            max-height: 420px; /* tweak as needed */
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Improve readability: slightly larger line-height for wrapped commands */
+        .no-scroll-pre code,
+        .no-scroll-pre {
+            line-height: 1.35;
+            font-family: 'Ubuntu Mono', monospace;
+        }
+
+        /* Copy button small adjustments */
+        .copy-curl-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 6px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .copy-curl-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .copy-curl-btn i {
+            font-size: 14px;
+        }
+        .copy-curl-btn:hover i {
+            transform: none;
+        }
+
     </style>
 </head>
 <body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
@@ -160,7 +251,7 @@
     <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-[#000000] z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
         <div class="py-4 px-4 flex justify-between items-center border-b border-neutral-dark">
             <h3 class="text-lg font-semibold text-white">API Categories</h3>
-            <button onclick="closeSidebar()" class="text-gray-400 hover:text-white lg:hidden" aria-label="Close Sidebar">
+            <button onclick="closeSidebar()" class="text-gray-400 lg:hidden" aria-label="Close Sidebar">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
@@ -172,20 +263,20 @@
     <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-[#000000] border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-base font-semibold text-white">Notifications</h4>
-            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium hover:text-premium-orange transition-colors">Mark all as read</button>
+            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium transition-colors">Mark all as read</button>
         </div>
         <div id="notifContent" class="space-y-4"></div>
     </div>
     <header class="sticky top-0 z-50 bg-[#000000] border-b border-neutral-dark py-4 shadow-md">
         <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto flex items-center px-4 lg:px-0 relative">
-            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
+            <button onclick="toggleSidebar()" class="pl-2 lg:hidden" aria-label="Open Sidebar">
                 <i class="fas fa-bars text-white text-xl"></i>
             </button>
             <h1 class="text-lg font-bold text-white absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0 lg:ml-0">Dashboard</h1>
             <div class="flex-grow"></div>
-            <button onclick="toggleNotifications()" class="relative transition-all hover:scale-110 pr-2" aria-label="Notifications">
-    <i class="fas fa-bell text-white text-xl"></i>
-    <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
+            <button onclick="toggleNotifications()" class="relative pr-2" aria-label="Notifications">
+                <i class="fas fa-bell text-white text-xl"></i>
+                <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
             </button>
         </div>
     </header>
@@ -199,8 +290,9 @@
                 <span id="apiStatus"></span>
             </div>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="bg-[#000000] rounded-lg p-6 border border-neutral-dark shadow-xl transition-all hover:shadow-premium">
+            <div class="bg-[#000000] rounded-lg p-6 border border-neutral-dark shadow-xl transition-all">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium">Total APIs</h3>
                     <i class="fa-regular fa-clipboard text-premium-yellow text-xl"></i>
@@ -210,7 +302,7 @@
                     <span class="text-sm text-gray-500 ml-1">endpoints</span>
                 </div>
             </div>
-            <div class="bg-[#000000] rounded-lg p-6 border border-neutral-dark shadow-xl transition-all hover:shadow-premium">
+            <div class="bg-[#000000] rounded-lg p-6 border border-neutral-dark shadow-xl transition-all">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium">Categories</h3>
                     <i class="fa-solid fa-layer-group text-green-400 text-xl"></i>
@@ -221,25 +313,20 @@
                 </div>
             </div>
         </div>
-        <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all hover:shadow-premium">
-            <p class="text-sm text-neutral-light mb-3">
-                Our API provides public endpoints that return JSON responses. No authentication required.
-            </p>
-            <div class="bg-[#000000] border border-neutral-dark p-4 rounded-md">
-                <p class="text-xs text-gray-500 uppercase tracking-wide">Base URL</p>
-                <code id="baseUrl" class="text-sm text-white font-mono"></code>
-            </div>
-        </div>
-        <div id="exampleEndpoint" class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+
+        <!-- Removed API info / Base URL card as requested -->
+
+        <div id="exampleEndpoint" class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all">
             <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-2">
                 Example Endpoint
             </h3>
             <p class="text-sm text-gray-400 mb-4">
-                Example showing request format, parameters, and responses.
+                Example showing request format and responses.
             </p>
             <div id="exampleContent"></div>
         </div>
-        <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+
+        <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all">
             <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-3 flex items-center">
                 Response Format
             </h3>
@@ -263,91 +350,10 @@
                 The additional fields depend on the endpoint.
             </p>
         </div>
-        <div class="bg-[#000000] border border-neutral-dark p-6 mb-6 rounded-lg shadow-md transition-all hover:shadow-premium">
-            <h3 class="text-lg font-medium bg-clip-text text-transparent bg-gradient-premium mb-3">
-                Error Codes
-            </h3>
-            <p class="text-sm text-gray-400 mb-4">
-                Common HTTP status codes you may encounter:
-            </p>
-            <div class="space-y-3">
-                <div class="bg-[#000000] border border-[#2E2E2E] p-4 rounded-md">
-                    <div class="flex items-start gap-3">
-                        <span class="font-mono text-sm text-green-400 font-medium">200</span>
-                        <div>
-                            <p class="text-sm text-white font-medium mb-1">Success</p>
-                            <p class="text-xs text-gray-400">Request processed successfully.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#000000] border border-[#2E2E2E] p-4 rounded-md">
-                    <div class="flex items-start gap-3">
-                        <span class="font-mono text-sm text-yellow-400 font-medium">400</span>
-                        <div>
-                            <p class="text-sm text-white font-medium mb-1">Bad Request</p>
-                            <p class="text-xs text-gray-400">Invalid parameters or missing required fields.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#000000] border border-[#2E2E2E] p-4 rounded-md">
-                    <div class="flex items-start gap-3">
-                        <span class="font-mono text-sm text-orange-400 font-medium">404</span>
-                        <div>
-                            <p class="text-sm text-white font-medium mb-1">Not Found</p>
-                            <p class="text-xs text-gray-400">Endpoint doesn't exist. Check URL and method.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#000000] border border-[#2E2E2E] p-4 rounded-md">
-                    <div class="flex items-start gap-3">
-                        <span class="font-mono text-sm text-red-400 font-medium">429</span>
-                        <div>
-                            <p class="text-sm text-white font-medium mb-1">Too Many Requests</p>
-                            <p class="text-xs text-gray-400">Rate limit exceeded. Wait before retrying.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#000000] border border-[#2E2E2E] p-4 rounded-md">
-                    <div class="flex items-start gap-3">
-                        <span class="font-mono text-sm text-red-400 font-medium">503</span>
-                        <div>
-                            <p class="text-sm text-white font-medium mb-1">Service Unavailable</p>
-                            <p class="text-xs text-gray-400">Temporarily unavailable. Try again later.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <!-- Error Codes and footer were previously removed -->
     </main>
-    <footer class="bg-[#000000] border-t border-neutral-dark py-6 relative z-10 w-full">
-        <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 class="font-semibold text-white mb-3">About</h3>
-                    <p id="aboutText" class="text-sm text-neutral-light leading-relaxed">
-                        This interactive interface allows you to explore and test our comprehensive collection of API endpoints in real-time.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-white mb-3">Connect</h3>
-                    <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-telegram-plane text-lg"></i>
-                        </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-facebook-messenger text-lg"></i>
-                        </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-github text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-gray-800 text-left">
-                <p class="text-sm text-gray-500" id="footerCopyright"></p>
-            </div>
-        </div>
-    </footer>
+
     <script>
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -358,6 +364,7 @@
         const notifBadge = document.getElementById('notifBadge');
         let notifs = [];
         let readIds = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+
         function relativeTime(timestamp) {
             const now = Date.now();
             const diff = now - timestamp;
@@ -367,6 +374,7 @@
             if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
             return new Date(timestamp).toLocaleDateString();
         }
+
         function toggleSidebar() {
             if (window.matchMedia('(min-width: 1024px)').matches) return;
             if (sidebar.classList.contains('-translate-x-full')) {
@@ -415,12 +423,14 @@
             }
             notifContent.innerHTML = notifHtml;
         }
+
         document.addEventListener('click', (event) => {
             if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
                 closeSidebar();
                 notificationPanel.classList.add('hidden');
             }
         });
+
         clearNotificationsBtn.addEventListener('click', () => {
             const newIds = notifs.map(n => n.id).filter(id => !readIds.includes(id));
             if (newIds.length > 0) {
@@ -429,6 +439,7 @@
                 updateNotifPanel();
             }
         });
+
         function initializeIndicator(endpointIndex) {
             const getTab = document.getElementById(`tab-get-${endpointIndex}`);
             if (getTab) {
@@ -457,6 +468,7 @@
                 }
             });
         }
+
         window.addEventListener('load', async () => {
             const loader = document.getElementById('loader');
             const main = document.querySelector('main');
@@ -472,21 +484,18 @@
                 document.getElementById('apiDescription').textContent = setData.description;
                 document.getElementById('headerImage').src = setData.header.imageSrc[0];
                 document.getElementById('apiStatus').textContent = setData.header.status;
-                document.getElementById('footerCopyright').textContent = `© ${new Date().getFullYear()} ${setData.name}. All rights reserved.`;
-                document.getElementById('telegramLink').href = setData.telegram;
-                document.getElementById('messengerLink').href = setData.messenger;
-                document.getElementById('githubLink').href = setData.github;
-                const aboutText = document.getElementById('aboutText');
 
                 notifs = setData.notification || [];
                 updateNotifPanel();
+
                 const endpointsRes = await fetch('/endpoints');
                 const endpointsData = await endpointsRes.json();
                 const endpoints = endpointsData.endpoints;
                 document.getElementById('totalEndpoints').textContent = endpointsData.count;
                 document.getElementById('totalCategories').textContent = endpoints.length;
+
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white rounded-xl ${location.pathname === '/docs' ? 'bg-[#000000]' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -500,7 +509,7 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname === `/category/${slug}`;
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white rounded-xl ${active ? 'bg-[#0b0b0b] border-l-4 border-[#eab308] pl-3' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
@@ -510,6 +519,7 @@
                     `;
                 }
                 sidebarContent.innerHTML = sidebarHtml;
+
                 // Start polling for notifications
                 setInterval(async () => {
                     try {
@@ -523,8 +533,7 @@
                 }, 5000);
                 // Update times every minute
                 setInterval(updateNotifPanel, 60000);
-                // Set base URL
-                document.getElementById('baseUrl').textContent = window.location.origin;
+
                 // Build random example endpoint
                 const allItems = endpoints.flatMap(c => c.items);
                 const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
@@ -534,103 +543,111 @@
                 const methods = randomItem.methods;
                 const methodStr = methods.join('/') || 'GET/POST';
                 const primaryMethod = methods.includes('POST') ? 'POST' : 'GET';
+
+                // Build cURL example (parameters are NOT injected into the cURL/Request area)
                 let curlExample = `curl -X ${primaryMethod} "${window.location.origin}${basePath}"`;
-                let jsExample = `fetch('${window.location.origin}${basePath}', {\n  method: '${primaryMethod}'`;
-                let paramsHtml = '';
                 let curlBody = '';
-                let jsBody = '';
                 if (randomItem.params && randomItem.params.length > 0) {
-                    paramsHtml = randomItem.params.map(p => `
-                        <div class="text-sm space-y-1">
-                            <span class="font-mono font-medium text-gray-200 block">${p.name}</span>
-                            <span class="text-gray-400 text-xs block">Type: string</span>
-                            <p class="text-gray-400 text-xs break-words">${p.desc}</p>
-                            ${p.example ? `<span class="text-gray-500 text-xs block">Example:</span><code class="bg-[#000000] px-1 py-0.5 rounded break-all max-w-full text-xs text-gray-300">${p.example}</code>` : ''}
-                        </div>
-                    `).join('');
                     const exampleParams = {};
                     randomItem.params.forEach(p => {
                         if (p.example) exampleParams[p.name] = p.example;
                     });
                     if (Object.keys(exampleParams).length > 0) {
+                        // keep example body generation for curl preview but DO NOT render parameter cards here
                         curlBody = ` \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(exampleParams)}'`;
-                        jsBody = `,\n  headers: {\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify(${JSON.stringify(exampleParams)})\n`;
                     }
                 }
                 curlExample += curlBody;
-                jsExample += jsBody + `})\n  .then(response => response.json())\n  .then(data => console.log(data))\n  .catch(error => console.error(error));`;
-                let tabsHtml = `
-                    <div class="relative border-b border-neutral-dark mb-3">
-                        <div class="flex relative">
-                            <button class="endpoint-tab px-4 py-2 text-sm font-medium text-white transition-colors" data-tab="curl-example">
-                                cURL
-                            </button>
-                            <button class="endpoint-tab px-4 py-2 text-sm font-medium text-gray-400 hover:text-gray-200 transition-colors" data-tab="js-example">
-                                JavaScript
-                            </button>
-                            <div class="tab-indicator" id="doc-tab-indicator" style="opacity: 1; left: 0px; width: 64px;"></div>
-                        </div>
-                    </div>
-                `;
-                let curlContentHtml = `
-                    <div id="curl-example" class="endpoint-content mb-3 text-xs">
-                        <div class="bg-[#000000] text-white font-mono text-xs border border-neutral-dark rounded-md">
-                            <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
-                                <span class="text-xs text-gray-500">Shell</span>
-                            </div>
-                            <div class="p-4">
-                                <pre class="text-white text-xs m-0"><code class="language-bash">${curlExample}</code></pre>
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-2">
-                            Terminal command - replace parameter values with your data.
-                        </p>
-                    </div>
-                `;
-                let jsContentHtml = `
-                    <div id="js-example" class="endpoint-content hidden mb-3 text-xs">
-                        <div class="bg-[#000000] text-white font-mono text-xs border border-neutral-dark rounded-md">
-                            <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
-                                <span class="text-xs text-gray-500">JavaScript</span>
-                            </div>
-                            <div class="p-4">
-                                <pre class="text-white text-xs m-0"><code class="language-javascript">const body = ${JSON.stringify(randomItem.params ? randomItem.params.reduce((acc, p) => { if (p.example) acc[p.name] = p.example; return acc; }, {}) : {})};
 
-fetch('${window.location.origin}${basePath}', {
-  method: '${primaryMethod}'${jsBody ? `,
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(body)` : ''}
-})
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });</code></pre>
+                // Build Parameters content: each parameter gets its own card/box and will ONLY be placed in Parameters tab
+                let paramsContentHtml = '';
+                const hasParams = Boolean(randomItem.params && randomItem.params.length > 0);
+                if (hasParams) {
+                    const paramsCards = randomItem.params.map(p => {
+                        const requiredText = p.required ? `<span class="text-xs font-medium text-red-400">Required</span>` : `<span class="text-xs text-gray-400">Optional</span>`;
+                        return `
+                            <div class="bg-[#0b0b0b] border border-neutral-dark p-4 rounded-md">
+                                <div class="flex items-start justify-between mb-2 gap-3">
+                                    <div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="font-mono text-sm text-white font-semibold">${p.name}</span>
+                                            <span class="text-xs text-gray-400">— ${p.type || 'string'}</span>
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-2">${p.desc || 'No description provided.'}</p>
+                                        ${p.example ? `<div class="mt-2"><span class="text-xs text-gray-500">Example:</span><code class="bg-[#000000] px-1 py-0.5 rounded break-all max-w-full text-xs text-gray-300 ml-1">${p.example}</code></div>` : ''}
+                                    </div>
+                                    <div class="flex-shrink-0 flex flex-col items-end">
+                                        ${requiredText}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    // Parameters content will be placed only inside the Parameters tab
+                    paramsContentHtml = `
+                        <div id="params-example" class="endpoint-content mb-3 text-xs hidden">
+                            <div class="mb-3">
+                                <div class="space-y-3">
+                                    ${paramsCards}
+                                </div>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-400 mt-2">
-                            JavaScript using Fetch API.
-                        </p>
-                    </div>
-                `;
-                let paramsSection = '';
-                if (randomItem.params && randomItem.params.length > 0) {
-                    paramsSection = `
-                        <div class="mb-4">
-                            <h5 class="text-sm font-medium text-white mb-2">Parameters</h5>
-                            <p class="text-xs text-gray-400 mb-3">
-                                Parameters for the request.
-                            </p>
-                            <div class="bg-[#000000] border border-neutral-dark p-4 space-y-4 rounded-md overflow-hidden">
-                                ${paramsHtml}
+                    `;
+                } else {
+                    paramsContentHtml = ''; // show nothing if no params
+                }
+
+                // Tabs: conditional — when params exist show cURL + Parameters; otherwise show single "Request" tab
+                let tabsHtml = '';
+                if (hasParams) {
+                    tabsHtml = `
+                        <div class="relative border-b border-neutral-dark mb-3">
+                            <div class="flex relative">
+                                <button class="endpoint-tab px-4 py-2 text-sm font-medium text-white" data-tab="curl-example">
+                                    cURL
+                                </button>
+                                <button class="endpoint-tab px-4 py-2 text-sm font-medium text-gray-400" data-tab="params-example">
+                                    Parameters
+                                </button>
+                                <div class="tab-indicator" id="doc-tab-indicator" style="opacity: 1; left: 0px; width: 64px;"></div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // single "Request" tab which maps to curl-example content
+                    tabsHtml = `
+                        <div class="relative border-b border-neutral-dark mb-3">
+                            <div class="flex relative">
+                                <button class="endpoint-tab px-4 py-2 text-sm font-medium text-white" data-tab="curl-example">
+                                    Request
+                                </button>
+                                <div class="tab-indicator" id="doc-tab-indicator" style="opacity: 1; left: 0px; width: 64px;"></div>
                             </div>
                         </div>
                     `;
                 }
+
+                // cURL content: parameters are NOT shown here. If no params, add the note under the shell box.
+                // NOTE: pre uses "no-scroll-pre" + container to allow wrapping and prevent horizontal scrolling
+                let curlContentHtml = `
+                    <div id="curl-example" class="endpoint-content mb-3 text-xs">
+                        <div class="bg-[#000000] text-white font-mono text-xs border border-neutral-dark rounded-md relative">
+                            <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md flex justify-between items-center">
+                                <span class="text-xs text-gray-500">Shell</span>
+                                <button class="copy-curl-btn inline-flex items-center gap-2 px-2 py-1 rounded text-gray-300 hover:text-white transition" aria-label="Copy cURL">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span class="sr-only">Copy</span>
+                                </button>
+                            </div>
+                            <div class="p-4 no-scroll-pre-container">
+                                <pre class="text-white text-xs m-0 no-scroll-pre"><code class="language-bash">${curlExample}</code></pre>
+                            </div>
+                        </div>
+                        ${!hasParams ? `<p class="text-xs text-gray-400 mt-2">cURL command to test the endpoint.</p>` : ''}
+                    </div>
+                `;
+
+                // Assemble exampleContent: place tabs, curl content, and the parameters tab content (only the params tab holds parameter cards)
                 exampleContent.innerHTML = `
                     <div class="mb-4">
                         <h4 class="text-base font-medium text-white mb-2">
@@ -652,17 +669,20 @@ fetch('${window.location.origin}${basePath}', {
                         </p>
                         ${tabsHtml}
                         ${curlContentHtml}
-                        ${jsContentHtml}
+                        ${paramsContentHtml}
                     </div>
-                    ${paramsSection}
                 `;
-                // Initialize tabs
+
+                // Initialize tabs (works with single or multiple tabs)
                 const firstTab = document.querySelector('.endpoint-tab');
-                const indicator = document.getElementById('doc-tab-indicator');
-                if (firstTab && indicator) {
-                    indicator.style.left = firstTab.offsetLeft + 'px';
-                    indicator.style.width = firstTab.offsetWidth + 'px';
+                const indicatorEl = document.getElementById('doc-tab-indicator');
+                if (firstTab && indicatorEl) {
+                    requestAnimationFrame(() => {
+                        indicatorEl.style.left = firstTab.offsetLeft + 'px';
+                        indicatorEl.style.width = firstTab.offsetWidth + 'px';
+                    });
                 }
+
                 const endpointTabs = document.querySelectorAll('.endpoint-tab');
                 endpointTabs.forEach(tab => {
                     tab.addEventListener('click', function() {
@@ -670,29 +690,97 @@ fetch('${window.location.origin}${basePath}', {
                         const siblingTabs = this.parentElement.querySelectorAll('.endpoint-tab');
                         siblingTabs.forEach(t => {
                             t.classList.remove('text-white');
-                            t.classList.add('text-gray-400', 'hover:text-gray-200');
+                            t.classList.add('text-gray-400');
                         });
-                        this.classList.remove('text-gray-400', 'hover:text-gray-200');
+                        this.classList.remove('text-gray-400');
                         this.classList.add('text-white');
                         const indicator = document.getElementById('doc-tab-indicator');
                         if (indicator) {
                             indicator.style.left = this.offsetLeft + 'px';
                             indicator.style.width = this.offsetWidth + 'px';
                         }
+                        // hide all endpoint-content blocks within this example container
                         const contents = this.closest('.mb-4').querySelectorAll('.endpoint-content');
                         contents.forEach(content => {
                             content.classList.add('hidden');
                         });
-                        document.getElementById(targetId).classList.remove('hidden');
+                        // show the selected tab content; if params tab selected, it contains the parameter cards
+                        const targetEl = document.getElementById(targetId);
+                        if (targetEl) targetEl.classList.remove('hidden');
                         hljs.highlightAll();
                     });
                 });
+
+                // Ensure initial visibility:
+                // - Show curl-example by default
+                const defaultCurl = document.getElementById('curl-example');
+                if (defaultCurl) defaultCurl.classList.remove('hidden');
+                // - If params tab exists, it's hidden by default (cards only appear in Parameters tab)
+                // Highlight initial code blocks
                 hljs.highlightAll();
-                // Make operator dynamic
+
+                // Make operator dynamic in response format
                 const responseFormatCode = document.getElementById('responseFormatCode');
                 if (responseFormatCode) {
                     responseFormatCode.innerHTML = responseFormatCode.innerHTML.replace('"AjiroDesu"', `"${setData.operator}"`);
                 }
+
+                // ---------- Copy button handler for cURL (delegated) ----------
+                document.addEventListener('click', async (ev) => {
+                    const btn = ev.target.closest('.copy-curl-btn');
+                    if (!btn) return;
+
+                    // Find nearest code block inside the same container
+                    const container = btn.closest('.no-scroll-pre-container') || btn.closest('.endpoint-content') || btn.closest('.bg-[#000000]') || document;
+                    const codeEl = container.querySelector('pre.no-scroll-pre, code.language-bash, pre code') || null;
+                    const text = codeEl ? (codeEl.innerText || codeEl.textContent || '') : '';
+
+                    if (!text) return;
+
+                    // Visual feedback - change icon to check then revert
+                    const icon = btn.querySelector('i');
+                    const originalClass = icon ? icon.className : null;
+
+                    // Try navigator.clipboard first, fallback to textarea + execCommand
+                    try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(text);
+                        } else {
+                            const ta = document.createElement('textarea');
+                            ta.value = text;
+                            // Prevent scrolling to bottom
+                            ta.style.position = 'fixed';
+                            ta.style.top = '-9999px';
+                            document.body.appendChild(ta);
+                            ta.focus();
+                            ta.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(ta);
+                        }
+
+                        if (icon) {
+                            icon.className = 'fa-solid fa-check text-green-400';
+                        }
+                        btn.setAttribute('disabled', 'disabled');
+
+                        // small accessible tooltip via title attr
+                        const originalTitle = btn.getAttribute('title') || '';
+                        btn.setAttribute('title', 'Copied');
+
+                        setTimeout(() => {
+                            if (icon && originalClass) icon.className = originalClass;
+                            btn.removeAttribute('disabled');
+                            if (originalTitle) {
+                                btn.setAttribute('title', originalTitle);
+                            } else {
+                                btn.removeAttribute('title');
+                            }
+                        }, 1500);
+                    } catch (err) {
+                        console.error('Copy failed', err);
+                    }
+                });
+
             } finally {
                 loader.classList.add('hidden');
                 main.classList.add('loaded');

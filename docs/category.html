@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="theme-color" content="#000000">
-    <meta name="robots" content="index, follow">
-    <meta name="keywords" content="API endpoints, RESTful API category, developer documentation, dark theme API tools">
-    <meta property="og:title" content="Category - ">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="theme-color" content="#000000"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="keywords" content="API endpoints, RESTful API category, developer documentation, dark theme API tools"/>
+    <meta property="og:title" content="Category - "/>
+    <meta property="og:description" content=""/>
+    <meta property="og:type" content="website"/>
     <title>Category - </title>
-    <link rel="icon" href="/image/icon.png" type="image/png">
-    <link rel="canonical" href="">
+    <link rel="icon" href="/image/icon.png" type="image/png"/>
+    <link rel="canonical" href="/"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
@@ -46,6 +46,7 @@
                 display: none !important;
             }
         }
+
         /* Loader styles */
         #loader {
             position: fixed;
@@ -148,16 +149,13 @@
             height: 100%;
             min-height: 100vh;
             z-index: -1;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
+            background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
         }
         .bg-gradient-premium {
             background: linear-gradient(to right, #FBBF24, #F97316);
-        }
-        .hover\:shadow-premium:hover {
-            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
         }
         .text-premium {
             color: #D1D5DB;
@@ -175,6 +173,93 @@
             background: transparent !important;
             padding: 0 !important;
         }
+
+        /* ----------------------------
+           Disable hover effects sitewide
+           ---------------------------- */
+        a:hover,
+        button:hover,
+        input:hover,
+        textarea:hover,
+        select:hover,
+        .hover\:shadow-premium:hover,
+        .hover\:opacity-90:hover,
+        .hover\:text-white:hover,
+        .hover\:bg-gray-600:hover,
+        .hover\:scale-110:hover,
+        .hover\:border-premium-yellow:hover,
+        .hover\:shadow-sm:hover {
+            box-shadow: none !important;
+            transform: none !important;
+            opacity: 1 !important;
+            background-color: transparent !important;
+            color: inherit !important;
+        }
+        /* neutralize hover background or text moves */
+        a, button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* API title color */
+        .api-title {
+            color: #FBBF24;
+        }
+
+        /* CURL shell: wrap long lines and prevent horizontal scrolling */
+        .curl-pre {
+            /* allow wrapping of long lines */
+            white-space: pre-wrap;         /* preserve line breaks but wrap long lines */
+            overflow-wrap: anywhere;       /* allow words to break anywhere if needed */
+            word-break: break-word;
+            /* vertical scroll only, hide horizontal scrollbar */
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 10rem; /* matches previous max-h-40 roughly */
+        }
+
+        /* ensure code inside curl respects wrapping */
+        .curl-pre code {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        /* Copy / Action button styling (consistent with previous code) */
+        .copy-curl-btn,
+        .download-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 6px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #cbd5e1; /* gray-300 */
+            min-width: 36px;
+            justify-content: center;
+        }
+        .copy-curl-btn:disabled,
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .copy-curl-btn i,
+        .download-btn i {
+            font-size: 14px;
+        }
+        .copy-curl-btn[aria-label] { /* accessible outline on focus */
+            outline: none;
+        }
+        .copy-curl-btn:focus,
+        .download-btn:focus {
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+            border-color: rgba(249, 115, 22, 0.12);
+        }
+        .action-success { /* success color for icon */
+            color: #34d399 !important; /* green-400 */
+        }
     </style>
 </head>
 <body class="bg-[#000000] text-premium antialiased font-sans min-h-screen">
@@ -182,43 +267,51 @@
     <div id="loader">
         <span class="loading-text">Loading</span>
     </div>
+
     <!-- Sidebar -->
     <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-[#000000] z-[60] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-2xl border-r border-neutral-dark">
         <div class="py-4 px-4 flex justify-between items-center border-b border-neutral-dark">
             <h3 class="text-lg font-semibold text-white">API Categories</h3>
-            <button onclick="closeSidebar()" class="text-gray-400 hover:text-white lg:hidden" aria-label="Close Sidebar">
+            <button onclick="closeSidebar()" class="text-gray-400 lg:hidden" aria-label="Close Sidebar">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <div id="sidebarContent" class="pt-4 px-4 space-y-3"></div>
     </div>
+
     <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black/50 hidden lg:hidden z-[50]" onclick="closeSidebar()"></div>
+
     <!-- Notification Panel -->
     <div id="notificationPanel" class="hidden fixed top-12 right-0 bg-[#000000] border border-neutral-dark p-4 z-[60] shadow-2xl rounded-xl w-80 max-h-96 overflow-y-auto transition-all">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-base font-semibold text-white">Notifications</h4>
-            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium hover:text-premium-orange transition-colors">Mark all as read</button>
+            <button id="clearNotifications" class="text-premium-yellow text-sm font-medium transition-colors">Mark all as read</button>
         </div>
         <div id="notifContent" class="space-y-4"></div>
     </div>
+
     <header class="sticky top-0 z-50 bg-[#000000] border-b border-neutral-dark py-4 shadow-md">
         <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto flex items-center px-4 lg:px-0 relative">
-            <button onclick="toggleSidebar()" class="pl-2 transition-all hover:scale-110 lg:hidden" aria-label="Open Sidebar">
+            <button onclick="toggleSidebar()" class="pl-2 transition-all lg:hidden" aria-label="Open Sidebar">
                 <i class="fas fa-bars text-white text-xl"></i>
             </button>
             <h1 class="text-lg font-bold text-white absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0 lg:ml-4">Dashboard</h1>
             <div class="flex-grow"></div>
-            <button onclick="toggleNotifications()" class="relative transition-all hover:scale-110 pr-2" aria-label="Notifications">
-    <i class="fas fa-bell text-white text-xl"></i>
-    <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
+            <button onclick="toggleNotifications()" class="relative transition-all pr-2" aria-label="Notifications">
+                <i class="fas fa-bell text-white text-xl"></i>
+                <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1 hidden"></span>
             </button>
         </div>
     </header>
+
     <main class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-6 py-8 lg:px-8">
         <div class="text-left mb-8">
-            <h2 id="headerTitle" class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-premium inline-flex items-center"><span class="material-icons align-middle mr-3">arrow_outward</span></h2>
+            <h2 id="headerTitle" class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-premium inline-flex items-center">
+                <span class="material-icons align-middle mr-3">arrow_outward</span>
+            </h2>
         </div>
+
         <div class="flex items-center justify-between mb-4">
             <div class="flex-1 relative">
                 <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
@@ -228,11 +321,12 @@
                     type="text"
                     id="searchInput"
                     placeholder="Search endpoints..."
-                    class="w-full pl-12 pr-4 py-4 text-sm border border-neutral-dark bg-[#000000] text-white placeholder-gray-500 focus:outline-none focus:border-premium-yellow rounded-lg shadow-sm transition-all focus:shadow-premium"
+                    class="w-full pl-12 pr-4 py-4 text-sm border border-neutral-dark bg-[#000000] text-white placeholder-gray-500 focus:outline-none focus:border-premium-yellow rounded-lg shadow-sm transition-all"
                     aria-label="Search Endpoints"
-                >
+                />
             </div>
         </div>
+
         <div id="content" class="space-y-6">
             <div id="noResults" class="text-center py-16" style="display: none;">
                 <div class="max-w-md mx-auto">
@@ -242,35 +336,9 @@
             <div id="apiList" class="space-y-6"></div>
         </div>
     </main>
-    <footer class="bg-[#000000] border-t border-neutral-dark py-6 relative z-10 w-full">
-        <div class="max-w-2xl mx-auto lg:ml-[calc(50%-16rem)] lg:max-w-3xl lg:mr-auto px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 class="font-semibold text-white mb-3">About</h3>
-                    <p id="aboutText" class="text-sm text-neutral-light leading-relaxed">
-                        This interactive interface allows you to explore and test our comprehensive collection of API endpoints in real-time.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-white mb-3">Connect</h3>
-                    <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-telegram-plane text-lg"></i>
-                        </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-facebook-messenger text-lg"></i>
-                        </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
-                            <i class="fab fa-github text-lg"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-gray-800 text-left">
-                <p class="text-sm text-gray-500" id="footerCopyright"></p>
-            </div>
-        </div>
-    </footer>
+
+    <!-- (Footer removed as requested) -->
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
@@ -282,6 +350,7 @@
         const notifBadge = document.getElementById('notifBadge');
         let notifs = [];
         let readIds = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+
         function relativeTime(timestamp) {
             const now = Date.now();
             const diff = now - timestamp;
@@ -291,6 +360,7 @@
             if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
             return new Date(timestamp).toLocaleDateString();
         }
+
         function toggleSidebar() {
             if (window.matchMedia('(min-width: 1024px)').matches) return;
             if (sidebar.classList.contains('-translate-x-full')) {
@@ -339,6 +409,7 @@
             }
             notifContent.innerHTML = notifHtml;
         }
+
         document.addEventListener('click', (event) => {
             if (!event.target.closest('header') && !event.target.closest('#sidebar') && !event.target.closest('#notificationPanel')) {
                 closeSidebar();
@@ -358,6 +429,7 @@
                 }
             });
         });
+
         clearNotificationsBtn.addEventListener('click', () => {
             const newIds = notifs.map(n => n.id).filter(id => !readIds.includes(id));
             if (newIds.length > 0) {
@@ -366,6 +438,7 @@
                 updateNotifPanel();
             }
         });
+
         let searchInput, noResults, apiList;
         function toggleEndpoint(endpointIndex) {
             const content = document.getElementById(`endpoint-${endpointIndex}`);
@@ -392,7 +465,6 @@
                 indicator.style.width = getTab.offsetWidth + 'px';
             }
         }
-        // Return the currently active method name (GET, POST, etc.) for an endpoint
         function getActiveMethod(endpointIndex) {
             const possible = ['get','post','put','delete','head','patch'];
             for (const m of possible) {
@@ -401,7 +473,6 @@
                     return m.toUpperCase();
                 }
             }
-            // fallback to first available tab
             const firstTab = document.querySelector(`#tab-get-${endpointIndex}`) || document.querySelector(`#tab-post-${endpointIndex}`);
             return firstTab ? (firstTab.textContent || 'GET').trim().toUpperCase() : 'GET';
         }
@@ -446,6 +517,7 @@
             if (selectedSpan) selectedSpan.textContent = label;
             toggleDropdown(dropdownId);
         }
+
         function generateExampleCurl(endpointIndex, method) {
             const form = document.getElementById(`form-${endpointIndex}`);
             const onsubmit = form.getAttribute('onsubmit');
@@ -495,17 +567,16 @@
             const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
             if (!curlContent) return;
             curlContent.classList.remove('hljs');
-            // set text then explicitly run highlight.js for bash
             curlContent.textContent = curl;
             try {
                 const result = hljs.highlight(curl, { language: 'bash' });
                 curlContent.innerHTML = result.value;
                 curlContent.classList.add('hljs');
             } catch (e) {
-                // fallback
                 hljs.highlightElement(curlContent);
             }
         }
+
         function switchMethod(endpointIndex, method) {
             const possible = ['get','post','put','delete','head','patch'];
             const tabs = possible.filter(m => document.getElementById(`tab-${m}-${endpointIndex}`)).map(m => m.toUpperCase());
@@ -541,7 +612,6 @@
             const curlEl = document.getElementById(`curl-content-${endpointIndex}`);
             if (curlEl) {
                 curlEl.classList.remove('hljs');
-                // try to explicitly highlight current text with bash grammar
                 try {
                     const currentText = curlEl.textContent || curlEl.innerText || '';
                     const result = hljs.highlight(currentText, { language: 'bash' });
@@ -552,18 +622,20 @@
                 }
             }
         }
+
+        // Modified clearResponse: reset to default visible message rather than hide
         function clearResponse(endpointIndex) {
             const responseElement = document.getElementById(`response-${endpointIndex}`);
             const responseContent = document.getElementById(`response-content-${endpointIndex}`);
             const clearButton = document.getElementById(`clear-${endpointIndex}`);
-            responseElement.classList.add('slide-up');
-            setTimeout(() => {
-                responseElement.classList.add('hidden');
-                responseElement.classList.remove('slide-up', 'slide-down');
-                responseContent.innerHTML = '';
-                clearButton.classList.add('hidden');
-            }, 150);
+            const copyButton = document.getElementById(`copy-response-${endpointIndex}`);
+            // reset content to default message and keep response visible
+            responseContent.innerHTML = '<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code>Send a request to see the response here...</code></pre>';
+            responseElement.classList.remove('slide-up', 'slide-down', 'hidden');
+            clearButton.classList.add('hidden');
+            if (copyButton) copyButton.classList.add('hidden');
         }
+
         function fallbackCopy(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
@@ -581,29 +653,97 @@
             }
             document.body.removeChild(textArea);
         }
-        function copyToClipboard(elementId) {
+
+        // Show success animation/state for copy/download actions
+        function showActionSuccess(btn, label = 'Done') {
+            if (!btn) return;
+            const icon = btn.querySelector('i') || btn.querySelector('span.material-icons');
+            let originalInner = btn.getAttribute('data-original') || btn.innerHTML;
+            // store original if not stored yet
+            if (!btn.getAttribute('data-original')) {
+                btn.setAttribute('data-original', originalInner);
+            }
+            // show check
+            if (icon) {
+                // replace icon with solid check
+                btn.querySelectorAll('i, span.material-icons').forEach(el => el.className = ''); // reset
+                btn.innerHTML = '<i class="fa-solid fa-check action-success"></i>';
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-check action-success"></i>';
+            }
+            btn.setAttribute('disabled', 'disabled');
+            // accessible title
+            const originalTitle = btn.getAttribute('title') || '';
+            btn.setAttribute('title', label);
+            setTimeout(() => {
+                // revert
+                const orig = btn.getAttribute('data-original') || originalInner;
+                btn.innerHTML = orig;
+                btn.removeAttribute('disabled');
+                if (originalTitle) {
+                    btn.setAttribute('title', originalTitle);
+                } else {
+                    btn.removeAttribute('title');
+                }
+            }, 1500);
+        }
+
+        // copyToClipboard(elementId, btn) - btn should be the button element that was clicked
+        function copyToClipboard(elementId, btn) {
             const element = document.getElementById(elementId);
             let text = '';
+            if (!element) return;
             if (elementId.startsWith('response-content-')) {
                 const headerPres = element.querySelectorAll('.text-gray-400 pre');
                 const headerText = Array.from(headerPres).map(pre => pre.textContent.trim()).join('\n');
-                const bodyPre = element.querySelector('pre.text-white');
-                const bodyText = bodyPre ? bodyPre.textContent : '';
+                const bodyPre = element.querySelector('pre.text-white') || element.querySelector('pre');
+                const bodyText = bodyPre ? (bodyPre.textContent || bodyPre.innerText || '') : '';
                 text = headerText + (bodyText ? '\n\n' + bodyText : '');
             } else if (elementId.startsWith('curl-content-')) {
+                // preserve backslashes and formatting (but make the copy consistent)
                 text = element.textContent.replace(/\s*\\\n\s*/g, ' \\\n ').trim();
+            } else {
+                text = element.textContent || element.innerText || '';
             }
+
             if (!navigator.clipboard) {
                 fallbackCopy(text);
+                // show quick UI success if btn provided
+                if (btn) showActionSuccess(btn, 'Copied');
                 return;
             }
             navigator.clipboard.writeText(text).then(() => {
-                console.log('Copied to clipboard');
+                // success
+                if (btn) showActionSuccess(btn, 'Copied');
             }).catch(err => {
                 console.error('Failed to copy: ', err);
                 fallbackCopy(text);
+                if (btn) showActionSuccess(btn, 'Copied');
             });
         }
+
+        // utility to trigger blob download from a URL or blob object and show success effect
+        function triggerDownloadAndShow(btn, urlOrBlob, filename = 'download') {
+            // create a link and click
+            const a = document.createElement('a');
+            if (typeof urlOrBlob === 'string') {
+                a.href = urlOrBlob;
+            } else {
+                // blob
+                a.href = URL.createObjectURL(urlOrBlob);
+            }
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                if (typeof urlOrBlob !== 'string') {
+                    URL.revokeObjectURL(a.href);
+                }
+            }, 200);
+            if (btn) showActionSuccess(btn, 'Downloaded');
+        }
+
         async function executeRequest(event, endpointIndex, method, path, contentType) {
             event.preventDefault();
             const form = event.target;
@@ -700,6 +840,7 @@
                         }
                     }
                 }
+
                 const curlContent = document.getElementById(`curl-content-${endpointIndex}`);
                 if (curlContent) {
                     curlContent.classList.remove('hljs');
@@ -712,15 +853,18 @@
                         hljs.highlightElement(curlContent);
                     }
                 }
+
                 curlElement.classList.remove('hidden');
                 curlElement.classList.add('slide-down');
                 responseContent.innerHTML = '<span class="text-white">Loading...</span>';
                 responseElement.classList.remove('hidden');
                 responseElement.classList.add('slide-down');
+
                 const response = await axios(axiosConfig);
                 const responseContentType = response.headers['content-type'] || '';
                 let contentHtml = '';
                 let lang = 'plaintext';
+
                 if (responseContentType.includes('application/json')) {
                     lang = 'json';
                     const jsonString = JSON.stringify(response.data, null, 2);
@@ -731,9 +875,12 @@
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
                     contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedJsonString}</code></pre>`;
+                    // prepare copy button
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`, copyResponseButton);
+                    // set visible icon and store original markup for revert
+                    copyResponseButton.classList.add('copy-curl-btn');
+                    copyResponseButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
                 } else if (responseContentType.includes('text/')) {
                     const escapedText = response.data
                         .replace(/&/g, '&amp;')
@@ -743,8 +890,9 @@
                         .replace(/'/g, '&#39;');
                     contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedText}</code></pre>`;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`, copyResponseButton);
+                    copyResponseButton.classList.add('copy-curl-btn');
+                    copyResponseButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
                 } else if (responseContentType.includes('image/')) {
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
@@ -753,13 +901,9 @@
                         <img src="${imageUrl}" alt="Response Image" class="max-w-full h-auto rounded">
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = imageUrl;
-                        a.download = 'image';
-                        a.click();
-                    };
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                    copyResponseButton.classList.add('download-btn');
+                    copyResponseButton.onclick = () => triggerDownloadAndShow(copyResponseButton, blobResponse.data, 'image');
+                    copyResponseButton.innerHTML = '<i class="fa-solid fa-download"></i>';
                 } else if (responseContentType.includes('audio/')) {
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
@@ -772,13 +916,9 @@
                         </audio>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = audioUrl;
-                        a.download = 'audio';
-                        a.click();
-                    };
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                    copyResponseButton.classList.add('download-btn');
+                    copyResponseButton.onclick = () => triggerDownloadAndShow(copyResponseButton, blobResponse.data, 'audio');
+                    copyResponseButton.innerHTML = '<i class="fa-solid fa-download"></i>';
                 } else if (responseContentType.includes('video/')) {
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
@@ -791,13 +931,9 @@
                         </video>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = videoUrl;
-                        a.download = 'video';
-                        a.click();
-                    };
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                    copyResponseButton.classList.add('download-btn');
+                    copyResponseButton.onclick = () => triggerDownloadAndShow(copyResponseButton, blobResponse.data, 'video');
+                    copyResponseButton.innerHTML = '<i class="fa-solid fa-download"></i>';
                 } else if (responseContentType.includes('application/pdf')) {
                     axiosConfig.responseType = 'blob';
                     const blobResponse = await axios(axiosConfig);
@@ -807,13 +943,9 @@
                         <iframe src="${pdfUrl}" class="w-full h-64 border border-gray-600 mb-3 rounded"></iframe>
                     `;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = pdfUrl;
-                        a.download = 'document.pdf';
-                        a.click();
-                    };
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">download</span>';
+                    copyResponseButton.classList.add('download-btn');
+                    copyResponseButton.onclick = () => triggerDownloadAndShow(copyResponseButton, blobResponse.data, 'document.pdf');
+                    copyResponseButton.innerHTML = '<i class="fa-solid fa-download"></i>';
                 } else {
                     const escapedText = response.data
                         .replace(/&/g, '&amp;')
@@ -823,9 +955,11 @@
                         .replace(/'/g, '&#39;');
                     contentHtml = `<pre class="text-white text-xs m-0 whitespace-pre-wrap"><code class="language-${lang}">${escapedText}</code></pre>`;
                     copyResponseButton.classList.remove('hidden');
-                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`);
-                    copyResponseButton.innerHTML = '<span class="material-icons text-sm">content_copy</span>';
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`, copyResponseButton);
+                    copyResponseButton.classList.add('copy-curl-btn');
+                    copyResponseButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
                 }
+
                 responseContent.innerHTML = contentHtml;
                 const responseCode = responseContent.querySelector('pre.text-white code');
                 if (responseCode) {
@@ -859,11 +993,18 @@
                 }
                 responseElement.classList.remove('hidden');
                 responseElement.classList.add('slide-down');
-                copyResponseButton.classList.remove('hidden');
+                const copyResponseButton = document.getElementById(`copy-response-${endpointIndex}`);
+                if (copyResponseButton) {
+                    copyResponseButton.classList.remove('hidden');
+                    copyResponseButton.classList.add('copy-curl-btn');
+                    copyResponseButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+                    copyResponseButton.onclick = () => copyToClipboard(`response-content-${endpointIndex}`, copyResponseButton);
+                }
             } finally {
                 clearButton.classList.remove('hidden');
             }
         }
+
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const apiItems = document.querySelectorAll('.api-item');
@@ -887,6 +1028,7 @@
                 apiList.style.display = 'block';
             }
         }
+
         async function loadCategory() {
             const loader = document.getElementById('loader');
             const main = document.querySelector('main');
@@ -896,10 +1038,10 @@
                 document.querySelector('meta[name="description"]').content = setData.description;
                 document.querySelector('meta[property="og:description"]').content = setData.description;
                 document.querySelector('link[rel="icon"]').href = setData.icon;
-                document.getElementById('footerCopyright').textContent = `© ${new Date().getFullYear()} ${setData.name}. All rights reserved.`;
-                document.getElementById('telegramLink').href = setData.telegram;
-                document.getElementById('messengerLink').href = setData.messenger;
-                document.getElementById('githubLink').href = setData.github;
+                // footer removed: skip setting footerCopyright
+                document.getElementById('telegramLink')?.setAttribute('href', setData.telegram || '#');
+                document.getElementById('messengerLink')?.setAttribute('href', setData.messenger || '#');
+                document.getElementById('githubLink')?.setAttribute('href', setData.github || '#');
                 const aboutText = document.getElementById('aboutText');
 
                 notifs = setData.notification || [];
@@ -936,7 +1078,7 @@
                                     type="button"
                                     onclick="switchMethod(${index}, '${m}')"
                                     id="tab-${m.toLowerCase()}-${index}"
-                                    class="px-4 py-2 text-xs font-semibold ${idx === 0 ? 'text-white' : 'text-gray-500 hover:text-white'} transition-colors"
+                                    class="px-4 py-2 text-xs font-semibold ${idx === 0 ? 'text-white' : 'text-gray-500'} transition-colors"
                                 >
                                     ${m}
                                 </button>
@@ -963,14 +1105,14 @@
                                 let selectedLabel = optionsArr.find(opt => opt.value === selectedValue)?.label || defaultLabel;
                                 const dropdownId = `dropdown-${index}-${pIndex}`;
                                 const optionsHtml = optionsArr.map(opt => `
-                                    <button type="button" onclick="selectOption('${dropdownId}', '${opt.value}', '${opt.label}')" class="w-full px-3 py-2 text-sm text-white hover:bg-[#000000] transition-all text-left ${opt.value === '' ? 'text-gray-500' : ''}">
+                                    <button type="button" onclick="selectOption('${dropdownId}', '${opt.value}', '${opt.label}')" class="w-full px-3 py-2 text-sm text-white transition-all text-left ${opt.value === '' ? 'text-gray-500' : ''}">
                                         ${opt.label}
                                     </button>
                                 `).join('');
                                 inputHtml = `
                                     <div class="relative custom-dropdown" id="${dropdownId}">
                                         <input type="hidden" name="${paramName}" value="${selectedValue}">
-                                        <button id="button-${dropdownId}" type="button" onclick="toggleDropdown('${dropdownId}')" class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm text-white rounded-lg transition-all focus:shadow-premium focus:outline-none focus:border-premium-yellow flex justify-between items-center">
+                                        <button id="button-${dropdownId}" type="button" onclick="toggleDropdown('${dropdownId}')" class="w-full px-3 py-2 border border-neutral-dark bg-[#000000] text-sm text-white rounded-lg transition-all focus:outline-none focus:border-premium-yellow flex justify-between items-center">
                                             <span id="selected-${dropdownId}">${selectedLabel}</span>
                                             <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -1009,19 +1151,18 @@
                             ${formHtml}
                         </div>
                     ` : '';
+
                     const div = document.createElement('div');
-                    div.classList.add('bg-[#000000]', 'border', 'border-neutral-dark', 'api-item', 'hover:border-premium-yellow', 'rounded-xl', 'overflow-hidden', 'shadow-md', 'transition-all', 'hover:shadow-premium');
+                    div.classList.add('bg-[#000000]', 'border', 'border-neutral-dark', 'api-item', 'rounded-xl', 'overflow-hidden', 'shadow-md', 'transition-all');
                     div.dataset.method = methodStr;
                     div.dataset.path = basePath;
                     div.dataset.alias = alias;
+
                     div.innerHTML = `
                         <button onclick="toggleEndpoint(${index})" class="w-full text-left">
                             <div class="px-5 py-3.5 flex items-center justify-between gap-3 bg-[#000000]">
                                 <div class="flex items-center min-w-0 flex-1 gap-3">
-                                    <span class="inline-block px-2.5 py-1 text-xs font-semibold text-white flex-shrink-0 rounded bg-gradient-premium transition-all hover:opacity-90">
-                                        ${methodStr}
-                                    </span>
-                                    <span class="font-semibold truncate text-[0.9rem] text-white" title="${alias}">${alias}</span>
+                                    <span class="font-semibold truncate text-[0.9rem] api-title" title="${alias}">${alias}</span>
                                 </div>
                                 <div class="flex items-center gap-2 flex-shrink-0">
                                     <span class="material-icons transition-transform duration-200 text-gray-400" id="endpoint-icon-${index}">expand_more</span>
@@ -1040,10 +1181,12 @@
                                 </div>
                                 <p class="text-xs text-gray-400 mb-4">${item.desc || item.description || ''}</p>
                             </div>
+
                             <div>
                                 <div class="text-neutral-light font-bold text-xs mb-2 flex items-center">
-                                    <span class="material-icons text-sm mr-1">play_arrow</span>
-                                    TRY IT OUT
+                                    <!-- Replaced TRY IT OUT with METHOD and changed icon to swap_calls -->
+                                    <span class="material-icons text-sm mr-1">swap_calls</span>
+                                    METHOD
                                 </div>
                                 <div>
                                     <form id="form-${index}" onsubmit="executeRequest(event, ${index}, '${methods[0]}', '${basePath}', 'application/json')">
@@ -1064,56 +1207,64 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="flex space-x-2 mt-4">
-                                            <button type="submit" class="flex-1 bg-gradient-premium hover:opacity-90 font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
+                                            <button type="submit" class="flex-1 bg-gradient-premium font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg">
                                                 Execute
                                             </button>
-                                            <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden flex-1 bg-[#000000] border border-neutral-dark hover:border-premium-yellow font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 rounded-lg">
+                                            <button type="button" id="clear-${index}" onclick="clearResponse(${index})" class="hidden flex-1 bg-[#000000] border border-neutral-dark font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 rounded-lg">
                                                 Clear
                                             </button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <div id="response-${index}" class="hidden mt-6">
+
+                            <div id="response-${index}" class="mt-6">
                                 <div class="text-neutral-light font-bold text-xs mb-3 flex items-center justify-between">
                                     <div class="flex items-center">
                                         <span class="material-icons text-sm mr-1">code</span>
                                         RESPONSE
                                     </div>
-                                    <button id="copy-response-${index}" onclick="copyToClipboard('response-content-${index}')" class="text-gray-400 hover:text-white flex items-center hidden transition-all">
-                                        <span class="material-icons text-sm">content_copy</span>
-                                    </button>
                                 </div>
                                 <div class="bg-[#000000] border border-neutral-dark text-white text-xs rounded-md">
-                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
+                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md flex items-center justify-between">
                                         <span class="text-xs text-gray-500">Output</span>
+                                        <button id="copy-response-${index}" onclick="copyToClipboard('response-content-${index}', this)" class="copy-curl-btn text-gray-400 flex items-center hidden transition-all" aria-label="Copy response">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
                                     </div>
-                                    <div class="p-4 max-h-80 overflow-auto" id="response-content-${index}"></div>
+                                    <!-- Output visible by default with default content -->
+                                    <div class="p-4 max-h-80 overflow-auto" id="response-content-${index}">
+                                        <pre class="text-white text-xs m-0 whitespace-pre-wrap"><code>Send a request to see the response here...</code></pre>
+                                    </div>
                                 </div>
                             </div>
+
                             <div id="curl-${index}" class="mt-6">
                                 <div class="text-neutral-light font-bold text-xs mb-3 flex items-center justify-between">
                                     <div class="flex items-center">
                                         <span class="material-icons text-sm mr-1">terminal</span>
                                         CURL COMMAND
                                     </div>
-                                    <button onclick="copyToClipboard('curl-content-${index}')" class="text-gray-400 hover:text-white flex items-center transition-all">
-                                        <span class="material-icons text-sm">content_copy</span>
-                                    </button>
                                 </div>
                                 <div class="bg-[#000000] border border-neutral-dark text-white text-xs rounded-md">
-                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md">
+                                    <div class="px-3 py-2 bg-[#000000] border-b border-neutral-dark rounded-t-md flex items-center justify-between">
                                         <span class="text-xs text-gray-500">Shell</span>
+                                        <button onclick="copyToClipboard('curl-content-${index}', this)" class="copy-curl-btn text-gray-400 flex items-center transition-all" aria-label="Copy cURL">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
                                     </div>
                                     <div class="p-4">
-                                        <pre class="text-white text-xs m-0 whitespace-pre-wrap overflow-auto max-h-40"><code class="language-bash" id="curl-content-${index}"></code></pre>
+                                        <!-- Use curl-pre to force wrapping and vertical scroll only -->
+                                        <pre class="text-white text-xs m-0 curl-pre"><code class="language-bash" id="curl-content-${index}"></code></pre>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     `;
                     apiList.appendChild(div);
+
                     // Initialize curl preview and attach live update handlers
                     generateExampleCurl(index, methods[0]);
                     const formEl = document.getElementById(`form-${index}`);
@@ -1137,8 +1288,9 @@
                     }
                     index++;
                 }
+
                 let sidebarHtml = `
-                    <a href="/docs" class="flex items-center px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${location.pathname === '/docs' || location.pathname === '/' ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
+                    <a href="/docs" class="flex items-center px-3 py-1 text-white rounded-xl transition-all ${location.pathname === '/docs' || location.pathname === '/' ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3 text-premium-yellow">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -1152,7 +1304,7 @@
                     const slug = cat.name.toLowerCase().replace(/\s+/g, '-');
                     const active = location.pathname.startsWith(`/category/${slug}`);
                     sidebarHtml += `
-                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white hover:bg-[#000000] rounded-xl transition-all hover:shadow-sm ${active ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
+                        <a href="/category/${slug}" class="flex items-center justify-between px-3 py-1 text-white rounded-xl transition-all ${active ? 'bg-[#050505] border-l-2 border-gray-600 pl-3 font-medium' : ''}">
                             <div class="flex items-center">
                                 <i class="fas fa-folder mr-3 text-premium-yellow"></i>
                                 ${capitalizedName} (${cat.items.length})
@@ -1162,6 +1314,7 @@
                     `;
                 }
                 sidebarContent.innerHTML = sidebarHtml;
+
                 // Start polling for notifications
                 setInterval(async () => {
                     try {
@@ -1173,6 +1326,7 @@
                         console.error('Failed to fetch notifications:', err);
                     }
                 }, 5000);
+
                 // Update times every minute
                 setInterval(updateNotifPanel, 60000);
             } finally {
@@ -1180,6 +1334,7 @@
                 main.classList.add('loaded');
             }
         }
+
         window.addEventListener('load', () => {
             searchInput = document.getElementById('searchInput');
             noResults = document.getElementById('noResults');
