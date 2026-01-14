@@ -7,7 +7,8 @@ const chalk = require('chalk');
 
 (async () => {
   const app = express();
-  const PORT = process.env.PORT || 4000;
+  const PORT = process.env.PORT || 5000;
+  const HOST = '0.0.0.0';
 
   const logger = {
     info: (message) => console.log(chalk.dim.blue('•') + chalk.dim(' info  - ') + message),
@@ -224,7 +225,7 @@ const chalk = require('chalk');
     res.status(500).sendFile(path.join(__dirname, 'docs', 'err', '500.html'));
   });
 
-  app.listen(PORT, () => {
+  app.listen(PORT, HOST, () => {
     logger.ready(`Server started successfully`);
     logger.info(`Local:   ${chalk.cyan(`http://localhost:${PORT}`)}`);
 
