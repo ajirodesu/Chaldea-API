@@ -11,7 +11,7 @@
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <title></title>
-    <link rel="icon" href="/image/icon.png" type="image/png">
+    <link rel="icon" href="" type="image/png">
     <link rel="canonical" href="/">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -127,6 +127,9 @@
         .bg-gradient-premium {
             background: linear-gradient(to right, #FBBF24, #F97316);
         }
+        .hover\:shadow-premium:hover {
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
         .text-premium {
             color: #D1D5DB;
         }
@@ -155,7 +158,7 @@
         <section id="introduction" class="mb-12 text-center flex flex-col items-center">
             <img id="headerImage" src="" alt="Header" class="mx-auto rounded-xl mb-6 w-[80%] md:w-[40%] lg:w-[40%]">
             <h2 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-premium">Welcome to <span id="apiName"></span></h2>
-            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all w-full">
+            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all hover:shadow-premium w-full">
                 <p id="apiDescription" class="text-base text-neutral-light mb-6"></p>
                 <p class="text-base text-neutral-light mb-4">
                     Our platform provides a streamlined API documentation system, enabling developers to explore and test endpoints efficiently in real-time.
@@ -165,7 +168,7 @@
                 </p>
             </div>
             <div class="w-full mt-6">
-                <a href="/docs" class="block px-8 py-3 bg-[#000000] border border-neutral-dark text-neutral-light font-medium text-sm rounded-lg text-center">
+                <a href="/docs" class="block px-8 py-3 bg-[#000000] border border-neutral-dark text-neutral-light font-medium hover:bg-gray-700 text-sm rounded-lg transition-all hover:shadow-premium text-center">
                     Get Started
                     <i class="material-icons align-middle text-sm ml-2">arrow_forward</i>
                 </a>
@@ -174,8 +177,8 @@
         <section id="features" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-premium">Key Features</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all">
-                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg">
+                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg transition-all hover:opacity-90">
                         <i class="material-icons text-white text-xl">flash_on</i>
                     </div>
                     <h3 class="text-base font-medium text-white mb-2">Lightning Fast</h3>
@@ -184,8 +187,8 @@
                     </p>
                 </div>
 
-                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all">
-                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg">
+                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg transition-all hover:opacity-90">
                         <i class="material-icons text-white text-xl">lock_open</i>
                     </div>
                     <h3 class="text-base font-medium text-white mb-2">No Authentication Required</h3>
@@ -194,8 +197,8 @@
                     </p>
                 </div>
 
-                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all">
-                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg">
+                <div class="bg-[#000000] border border-neutral-dark p-6 rounded-lg shadow-md transition-all hover:shadow-premium">
+                    <div class="w-8 h-8 bg-gradient-premium flex items-center justify-center mb-4 rounded-lg transition-all hover:opacity-90">
                         <i class="material-icons text-white text-xl">code</i>
                     </div>
                     <h3 class="text-base font-medium text-white mb-2">Seamless Integration</h3>
@@ -207,24 +210,24 @@
         </section>
         <section id="getting-started" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-premium">Getting Started</h2>
-            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all">
+            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all hover:shadow-premium">
                 <ol class="space-y-6">
                     <li class="flex">
-                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg">1</div>
+                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">1</div>
                         <div>
                             <h3 class="font-bold text-white">Select a Category</h3>
                             <p class="text-neutral-light text-base">Navigate through our categorized APIs via the sidebar to find the appropriate endpoints.</p>
                         </div>
                     </li>
                     <li class="flex">
-                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg">2</div>
+                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">2</div>
                         <div>
                             <h3 class="font-bold text-white">Review Documentation</h3>
                             <p class="text-neutral-light text-base">Examine parameters, response structures, and implementation examples.</p>
                         </div>
                     </li>
                     <li class="flex">
-                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg">3</div>
+                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-premium text-white font-bold text-center leading-8 mr-4 rounded-lg transition-all hover:opacity-90">3</div>
                         <div>
                             <h3 class="font-bold text-white">Implement Requests</h3>
                             <p class="text-neutral-light text-base">Execute HTTP calls and incorporate JSON responses into your applications.</p>
@@ -235,7 +238,7 @@
         </section>
         <section id="terms-of-service" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-premium">Terms of Service</h2>
-            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all">
+            <div class="bg-[#000000] border border-neutral-dark rounded-lg p-6 shadow-md transition-all hover:shadow-premium">
                 <p class="text-base text-neutral-light mb-4">
                     By utilizing <span id="apiNameTerms"></span>, you agree to adhere to these terms:
                 </p>
@@ -252,7 +255,7 @@
             </div>
         </section>
         <section id="call-to-action" class="mb-12">
-            <div class="bg-[#000000] border border-neutral-dark rounded-lg overflow-hidden shadow-md transition-all">
+            <div class="bg-[#000000] border border-neutral-dark rounded-lg overflow-hidden shadow-md transition-all hover:shadow-premium">
                 <div class="p-8 md:p-12 bg-[#000000]">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -263,7 +266,7 @@
                         Join a global community of developers leveraging our APIs. Gain immediate access to robust endpoints with extensive documentation.
                     </p>
                     <div class="flex flex-col sm:flex-row items-start gap-3">
-                        <a href="/docs" class="w-full sm:w-auto px-6 py-3 bg-gradient-premium text-white font-medium text-sm rounded-md flex items-center justify-center gap-2">
+                        <a href="/docs" class="w-full sm:w-auto px-6 py-3 bg-gradient-premium text-white font-medium hover:opacity-90 text-sm rounded-md flex items-center justify-center gap-2 transition-all hover:shadow-premium">
                             <i class="material-icons text-base text-white">description</i>
                             View Documentation
                         </a>
@@ -300,13 +303,13 @@
                 <div>
                     <h3 class="font-semibold text-white mb-3">Connect</h3>
                     <div class="flex gap-3">
-                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark text-neutral-light">
+                        <a id="telegramLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-telegram-plane text-lg"></i>
                         </a>
-                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark text-neutral-light">
+                        <a id="messengerLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-facebook-messenger text-lg"></i>
                         </a>
-                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark text-neutral-light">
+                        <a id="githubLink" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-dark hover:bg-gray-600 text-neutral-light hover:text-white transition-all">
                             <i class="fab fa-github text-lg"></i>
                         </a>
                     </div>
